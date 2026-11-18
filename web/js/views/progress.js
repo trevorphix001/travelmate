@@ -1,6 +1,6 @@
-import { api } from "../api.js?v=8";
-import { icon } from "../icons.js?v=8";
-import { esc, errorBox } from "../util.js?v=8";
+import { api } from "../api.js?v=9";
+import { icon } from "../icons.js?v=9";
+import { esc, errorBox } from "../util.js?v=9";
 
 // Backend node names -> what the traveller sees.
 const STEPS = [

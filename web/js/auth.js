@@ -1,5 +1,5 @@
 // Supabase email magic-link auth. Works only when SUPABASE_URL and SUPABASE_ANON_KEY are configured.
-import { CONFIG } from "./config.js?v=8";
+import { CONFIG } from "./config.js?v=9";
 
 const SUPABASE_ESM = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm";
 let client = null;

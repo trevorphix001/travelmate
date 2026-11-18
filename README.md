@@ -94,9 +94,22 @@ python -m eval.report                                          # eval/report.md 
 
 See [eval/README.md](eval/README.md) for how the cases were chosen and what each metric means.
 
+## Deploy
+
+- **API on Render** (free tier): `render.yaml` describes the service. In Render choose **New → Blueprint**,
+  pick this repository, and paste the secret values it asks for (they come from your `.env`; use the
+  Supabase *Session pooler* URL for `DATABASE_URL`, because Render has no IPv6).
+- **Website on GitHub Pages**: `.github/workflows/pages.yml` publishes `web/` on every push to `main`.
+  Enable it once under *Settings → Pages → Source: GitHub Actions*.
+- The website calls `http://127.0.0.1:8000` when opened locally and the Render API otherwise
+  (`web/js/config.js`). Add the Pages address to Supabase *Authentication → URL Configuration* so
+  sign-in links work.
+
+Free Render services sleep when idle, so the first request after a while can take up to a minute.
+
 ## Status
 
-The backend, LangGraph pipeline, evaluation harness and frontend are implemented, with 152 offline
-tests and a clean ruff run. Deployment and the full 40-case benchmark are still to do. The cost table
+The backend, LangGraph pipeline, evaluation harness and frontend are implemented, with 157 offline
+tests and a clean ruff run. The full 40-case benchmark is still to do. The cost table
 holds preliminary starter prices that the team must replace with researched, cited figures
 (see [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md)).

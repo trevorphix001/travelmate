@@ -1,7 +1,7 @@
 // One function per backend endpoint (names and fields from web/openapi.json).
-import { CONFIG } from "./config.js?v=8";
-import { getAccessToken } from "./auth.js?v=8";
-import { postStream } from "./sse.js?v=8";
+import { CONFIG } from "./config.js?v=9";
+import { getAccessToken } from "./auth.js?v=9";
+import { postStream } from "./sse.js?v=9";
 
 export class ApiError extends Error {
   constructor(title, detail, status, type) {

@@ -1,13 +1,13 @@
-import { api } from "./api.js?v=8";
-import { authEnabled, currentUser, initAuth, onAuthChange, signIn, signOut } from "./auth.js?v=8";
-import { icon } from "./icons.js?v=8";
-import { dispatch, go, route, startRouter } from "./router.js?v=8";
-import { errorBox, esc } from "./util.js?v=8";
-import { renderEval } from "./views/eval.js?v=8";
-import { initHome, scrollToSection } from "./views/home.js?v=8";
-import { renderMyPlans } from "./views/myplans.js?v=8";
-import { renderPlan } from "./views/plan.js?v=8";
-import { runProgress } from "./views/progress.js?v=8";
+import { api } from "./api.js?v=9";
+import { authEnabled, currentUser, initAuth, onAuthChange, signIn, signOut } from "./auth.js?v=9";
+import { icon } from "./icons.js?v=9";
+import { dispatch, go, route, startRouter } from "./router.js?v=9";
+import { errorBox, esc } from "./util.js?v=9";
+import { renderEval } from "./views/eval.js?v=9";
+import { initHome, scrollToSection } from "./views/home.js?v=9";
+import { renderMyPlans } from "./views/myplans.js?v=9";
+import { renderPlan } from "./views/plan.js?v=9";
+import { runProgress } from "./views/progress.js?v=9";
 
 const $ = (id) => document.getElementById(id);
 let current = null; // { plan } from the last generation

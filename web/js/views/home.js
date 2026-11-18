@@ -1,9 +1,9 @@
 // Home: hero + trip search, destinations, travel styles, trip ideas. Uses the same API calls as before
 // (/plans/parse, /places/search, /plans/stream via the generate callback).
-import { api } from "../api.js?v=8";
-import { icon } from "../icons.js?v=8";
-import { hydratePhotos, wikiPhoto } from "../photos.js?v=8";
-import { errorBox, esc } from "../util.js?v=8";
+import { api } from "../api.js?v=9";
+import { icon } from "../icons.js?v=9";
+import { hydratePhotos, wikiPhoto } from "../photos.js?v=9";
+import { errorBox, esc } from "../util.js?v=9";
 
 // Interest and pace values are the TripRequest enums in web/openapi.json.
 const STYLES = [

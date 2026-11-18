@@ -1,5 +1,5 @@
 // Evaluation page: loads web/data/report.json (written by `python -m eval.report`).
-import { errorBox, esc, label } from "../util.js?v=8";
+import { errorBox, esc, label } from "../util.js?v=9";
 
 const UNITS = { latency_s: "seconds", total_tokens: "tokens", llm_calls: "calls" };
 

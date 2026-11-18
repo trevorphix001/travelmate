@@ -1,8 +1,8 @@
-import { api } from "../api.js?v=8";
-import { authEnabled, currentUser } from "../auth.js?v=8";
-import { icon } from "../icons.js?v=8";
-import { hydratePhotos } from "../photos.js?v=8";
-import { errorBox, esc, fmtDate, rs } from "../util.js?v=8";
+import { api } from "../api.js?v=9";
+import { authEnabled, currentUser } from "../auth.js?v=9";
+import { icon } from "../icons.js?v=9";
+import { hydratePhotos } from "../photos.js?v=9";
+import { errorBox, esc, fmtDate, rs } from "../util.js?v=9";
 
 const head = `<div class="page-head"><span class="eyebrow">My trips</span><h1>Your saved trips</h1></div>`;
 const destOf = (title) => (title.split(" to ")[1] || title).split(",")[0].trim();

@@ -1,9 +1,9 @@
 // Itinerary page. Renders numbers exactly as the API returns them; JS only formats.
-import { api } from "../api.js?v=8";
-import { currentUser } from "../auth.js?v=8";
-import { icon, kindIcon } from "../icons.js?v=8";
-import { hydratePhotos, titleFromUrl, wikiPhoto } from "../photos.js?v=8";
-import { errorBox, esc, fmtDate, label, link, rs } from "../util.js?v=8";
+import { api } from "../api.js?v=9";
+import { currentUser } from "../auth.js?v=9";
+import { icon, kindIcon } from "../icons.js?v=9";
+import { hydratePhotos, titleFromUrl, wikiPhoto } from "../photos.js?v=9";
+import { errorBox, esc, fmtDate, label, link, rs } from "../util.js?v=9";
 
 const LEAFLET = {
   css: ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.css", "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="],

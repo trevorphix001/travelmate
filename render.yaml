@@ -1,0 +1,41 @@
+# Render Blueprint for the TravelMate API (https://render.com/docs/blueprint-spec).
+# Secrets use `sync: false`: Render asks for them in the dashboard and they never live in this repo.
+services:
+  - type: web
+    name: travelmate-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/v1/health
+    envVars:
+      # --- secrets: paste the values from your local .env when Render asks ---
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GEOAPIFY_API_KEY
+        sync: false
+      - key: DATABASE_URL          # the Session pooler URL (IPv4); Render has no IPv6
+        sync: false
+      - key: APP_USER_AGENT        # e.g. TravelMateAI/0.1 (contact: you@example.com)
+        sync: false
+      - key: ADMIN_KEY
+        sync: false
+      # --- plain settings ---
+      - key: SUPABASE_URL
+        value: https://bgvphduyjtotpkvnoaxm.supabase.co
+      - key: CORS_ORIGINS
+        value: https://trevorphix001.github.io
+      - key: LLM_PRIMARY
+        value: nvidia
+      - key: LLM_FALLBACKS
+        value: groq
+      - key: MODEL_PLANNER_NVIDIA
+        value: nvidia/nemotron-3-ultra-550b-a55b
+      - key: MODEL_EXTRACT_NVIDIA
+        value: nvidia/nemotron-3.5-bolt-e4b
+      - key: MODEL_PLANNER_GROQ
+        value: openai/gpt-oss-120b
+      - key: MODEL_EXTRACT_GROQ
+        value: openai/gpt-oss-20b
