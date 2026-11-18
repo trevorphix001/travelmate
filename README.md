@@ -9,7 +9,7 @@ Gemini as fallbacks) only extracts the request, ranks candidate IDs and groups I
 the LLM invents is dropped, and every item shown carries a `source` and a `confidence`
 (`verified` / `estimated` / `unavailable`).
 
-- Spec: [docs/PRD.md](docs/PRD.md)
+- Spec: [docs/PRD.md](docs/PRD.md) · **architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**
 - Graph: [docs/graph.md](docs/graph.md) · sources and compliance: [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) · [docs/LIMITATIONS.md](docs/LIMITATIONS.md)
 
 ## Architecture
