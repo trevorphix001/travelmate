@@ -1,4 +1,6 @@
-# TravelMate architecture
+# TravelMate: A Multi-Agent LLM System for Budget-Aware, Day-by-Day Trip Planning
+
+## Architecture
 
 TravelMate turns a trip request ("3 days from Guwahati to Shillong for 2, Rs 8000, waterfalls") into a
 day-by-day itinerary with real places, realistic travel times and an itemised cost estimate.

@@ -1,6 +1,6 @@
-# TravelMate AI
+# TravelMate: A Multi-Agent LLM System for Budget-Aware, Day-by-Day Trip Planning
 
-TravelMate AI turns a one-line request ("3 days from Guwahati to Shillong for 2, Rs 8000, waterfalls")
+TravelMate turns a one-line request ("3 days from Guwahati to Shillong for 2, Rs 8000, waterfalls")
 into a cited, budget-checked, map-ready day-wise itinerary, using only free APIs.
 
 **The design is grounded.** Tools produce the facts: OpenStreetMap, OSRM, Open-Meteo, Wikipedia and
