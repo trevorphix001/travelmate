@@ -1,0 +1,255 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" font-family="Inter, 'Segoe UI', Roboto, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#46596b"/>
+    </marker>
+    <marker id="arrow-cta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#e2552f"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f2233" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .title { font-size: 30px; font-weight: 800; fill: #0f2233; }
+      .subtitle { font-size: 15px; fill: #5d6f80; }
+      .group-title { font-size: 15px; font-weight: 800; fill: #0f2233; letter-spacing: .02em; }
+      .group-sub { font-size: 12px; fill: #5d6f80; }
+      .box-title { font-size: 14px; font-weight: 700; fill: #0f2233; }
+      .box-text { font-size: 12px; fill: #46596b; }
+      .white-title { font-size: 14px; font-weight: 700; fill: #ffffff; }
+      .white-text { font-size: 12px; fill: #e6f4f1; }
+      .pill { font-size: 11.5px; font-weight: 600; fill: #0b6b63; }
+      .edge { font-size: 11.5px; fill: #46596b; font-weight: 600; }
+      .edge-bg { fill: #ffffff; }
+      .line { stroke: #46596b; stroke-width: 1.8; fill: none; }
+      .line-dash { stroke: #46596b; stroke-width: 1.6; fill: none; stroke-dasharray: 6 5; }
+      .line-cta { stroke: #e2552f; stroke-width: 1.8; fill: none; }
+      .tiny { font-size: 11px; fill: #5d6f80; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1000" fill="#f6f7f9"/>
+
+  <!-- Title -->
+  <text x="40" y="58" class="title">TravelMate · System Architecture</text>
+  <text x="40" y="84" class="subtitle">Grounded trip planning: data services supply the facts, AI only reads, ranks and groups, Python schedules and calculates.</text>
+
+  <!-- ========== LEFT: traveller + website ========== -->
+  <circle cx="155" cy="140" r="24" fill="#0f2233"/>
+  <circle cx="155" cy="132" r="7" fill="#ffffff"/>
+  <path d="M141 152 q14 -14 28 0" stroke="#ffffff" stroke-width="3" fill="none"/>
+  <text x="155" y="184" text-anchor="middle" class="box-title">Traveller</text>
+  <path d="M155 192 V 214" class="line" marker-end="url(#arrow)"/>
+
+  <rect x="40" y="220" width="230" height="340" rx="16" fill="#ffffff" stroke="#dde3ea" filter="url(#shadow)"/>
+  <rect x="40" y="220" width="230" height="52" rx="16" fill="#0b6b63"/>
+  <rect x="40" y="252" width="230" height="20" fill="#0b6b63"/>
+  <text x="58" y="244" class="white-title">Website</text>
+  <text x="58" y="262" class="white-text">Render static site · web/</text>
+  <text x="58" y="300" class="box-title">Pages</text>
+  <text x="58" y="322" class="box-text">• Home: trip search, destinations,</text>
+  <text x="70" y="338" class="box-text">travel styles, trip ideas</text>
+  <text x="58" y="358" class="box-text">• Live planning progress</text>
+  <text x="58" y="378" class="box-text">• Itinerary: day timeline, map,</text>
+  <text x="70" y="394" class="box-text">getting there, stay, weather, costs</text>
+  <text x="58" y="414" class="box-text">• Refine trip · Save trip</text>
+  <text x="58" y="434" class="box-text">• My trips</text>
+  <text x="58" y="468" class="box-title">Built with</text>
+  <text x="58" y="490" class="box-text">HTML5 · CSS3 · vanilla JavaScript</text>
+  <text x="58" y="506" class="box-text">(ES modules) · Leaflet maps</text>
+  <text x="58" y="530" class="box-text">Numbers shown exactly as the API</text>
+  <text x="58" y="546" class="box-text">returns them; no business logic.</text>
+
+  <text x="40" y="592" class="tiny">The browser also loads OpenStreetMap map</text>
+  <text x="40" y="607" class="tiny">tiles and Wikimedia destination photos.</text>
+
+  <!-- website <-> api -->
+  <path d="M270 318 H 318" class="line" marker-end="url(#arrow)"/>
+  <rect x="272" y="294" width="44" height="16" class="edge-bg" rx="3"/>
+  <text x="294" y="306" text-anchor="middle" class="edge">REST</text>
+  <path d="M318 352 H 272" class="line" marker-end="url(#arrow)"/>
+  <rect x="272" y="358" width="44" height="30" class="edge-bg" rx="3"/>
+  <text x="294" y="370" text-anchor="middle" class="edge">live</text>
+  <text x="294" y="384" text-anchor="middle" class="edge">SSE</text>
+
+  <!-- ========== CENTER: API container ========== -->
+  <rect x="320" y="110" width="760" height="560" rx="18" fill="#ffffff" stroke="#0b6b63" stroke-width="2" filter="url(#shadow)"/>
+  <text x="344" y="142" class="group-title">TRAVELMATE API</text>
+  <text x="490" y="142" class="group-sub">Python · FastAPI · Pydantic v2 · Render web service</text>
+
+  <!-- endpoint pills -->
+  <g>
+    <rect x="344" y="158" width="114" height="26" rx="13" fill="#e3f2ef"/><text x="401" y="175" text-anchor="middle" class="pill">/plans/stream</text>
+    <rect x="466" y="158" width="78" height="26" rx="13" fill="#e3f2ef"/><text x="505" y="175" text-anchor="middle" class="pill">/plans</text>
+    <rect x="552" y="158" width="104" height="26" rx="13" fill="#e3f2ef"/><text x="604" y="175" text-anchor="middle" class="pill">/plans/save</text>
+    <rect x="664" y="158" width="128" height="26" rx="13" fill="#e3f2ef"/><text x="728" y="175" text-anchor="middle" class="pill">/plans/{id}/edit</text>
+    <rect x="800" y="158" width="122" height="26" rx="13" fill="#e3f2ef"/><text x="861" y="175" text-anchor="middle" class="pill">/places/search</text>
+    <rect x="930" y="158" width="126" height="26" rx="13" fill="#e3f2ef"/><text x="993" y="175" text-anchor="middle" class="pill">/health · /weather</text>
+  </g>
+
+  <!-- pipeline frame -->
+  <rect x="340" y="200" width="720" height="350" rx="14" fill="#f8fafb" stroke="#dde3ea" stroke-dasharray="5 4"/>
+  <text x="358" y="224" class="box-title">LangGraph planning pipeline</text>
+  <text x="560" y="224" class="tiny">3 AI steps (coral) · 5 Python steps (teal) · Research, Weather, Transport run in parallel</text>
+
+  <!-- nodes: AI = coral, Python = teal -->
+  <!-- Supervisor (AI) -->
+  <rect x="358" y="296" width="132" height="60" rx="10" fill="#fde7df" stroke="#e2552f" stroke-width="1.6"/>
+  <text x="424" y="321" text-anchor="middle" class="box-title">Supervisor</text>
+  <text x="424" y="339" text-anchor="middle" class="box-text">reads the request</text>
+  <!-- Geo -->
+  <rect x="516" y="296" width="110" height="60" rx="10" fill="#e3f2ef" stroke="#0b6b63" stroke-width="1.6"/>
+  <text x="571" y="321" text-anchor="middle" class="box-title">Geo resolver</text>
+  <text x="571" y="339" text-anchor="middle" class="box-text">finds both places</text>
+  <!-- Research (AI) -->
+  <rect x="660" y="240" width="150" height="52" rx="10" fill="#fde7df" stroke="#e2552f" stroke-width="1.6"/>
+  <text x="735" y="262" text-anchor="middle" class="box-title">Research</text>
+  <text x="735" y="280" text-anchor="middle" class="box-text">places, AI ranks IDs</text>
+  <!-- Weather -->
+  <rect x="660" y="300" width="150" height="52" rx="10" fill="#e3f2ef" stroke="#0b6b63" stroke-width="1.6"/>
+  <text x="735" y="322" text-anchor="middle" class="box-title">Weather</text>
+  <text x="735" y="340" text-anchor="middle" class="box-text">forecast or typical</text>
+  <!-- Transport -->
+  <rect x="660" y="360" width="150" height="52" rx="10" fill="#e3f2ef" stroke="#0b6b63" stroke-width="1.6"/>
+  <text x="735" y="382" text-anchor="middle" class="box-title">Transport</text>
+  <text x="735" y="400" text-anchor="middle" class="box-text">road route and fares</text>
+  <!-- Itinerary (AI) -->
+  <rect x="852" y="296" width="190" height="60" rx="10" fill="#fde7df" stroke="#e2552f" stroke-width="1.6"/>
+  <text x="947" y="319" text-anchor="middle" class="box-title">Itinerary</text>
+  <text x="947" y="336" text-anchor="middle" class="box-text">AI groups IDs into days,</text>
+  <text x="947" y="350" text-anchor="middle" class="box-text">Python schedules every minute</text>
+  <!-- Budget -->
+  <rect x="852" y="460" width="190" height="60" rx="10" fill="#e3f2ef" stroke="#0b6b63" stroke-width="1.6"/>
+  <text x="947" y="484" text-anchor="middle" class="box-title">Budget</text>
+  <text x="947" y="502" text-anchor="middle" class="box-text">itemised costs, in rupees</text>
+  <!-- Aggregator -->
+  <rect x="640" y="460" width="170" height="60" rx="10" fill="#e3f2ef" stroke="#0b6b63" stroke-width="1.6"/>
+  <text x="725" y="484" text-anchor="middle" class="box-title">Aggregator</text>
+  <text x="725" y="502" text-anchor="middle" class="box-text">validates, lists sources</text>
+  <!-- TripPlan -->
+  <rect x="440" y="466" width="150" height="48" rx="24" fill="#0f2233"/>
+  <text x="515" y="495" text-anchor="middle" class="white-title">Trip plan</text>
+
+  <!-- pipeline edges -->
+  <path d="M490 326 H 514" class="line" marker-end="url(#arrow)"/>
+  <path d="M626 326 C 640 326, 640 266, 658 266" class="line" marker-end="url(#arrow)"/>
+  <path d="M626 326 H 658" class="line" marker-end="url(#arrow)"/>
+  <path d="M626 326 C 640 326, 640 386, 658 386" class="line" marker-end="url(#arrow)"/>
+  <path d="M810 266 C 830 266, 830 326, 850 326" class="line" marker-end="url(#arrow)"/>
+  <path d="M810 326 H 850" class="line" marker-end="url(#arrow)"/>
+  <path d="M810 386 C 830 386, 830 326, 850 326" class="line" marker-end="url(#arrow)"/>
+  <path d="M930 356 V 458" class="line" marker-end="url(#arrow)"/>
+  <path d="M964 458 V 358" class="line-cta" marker-end="url(#arrow-cta)"/>
+  <rect x="970" y="392" width="84" height="32" class="edge-bg" rx="4" fill="#f8fafb"/>
+  <text x="975" y="405" class="edge" fill="#e2552f" style="fill:#c94520">over budget:</text>
+  <text x="975" y="419" class="edge" style="fill:#c94520">retry ≤ 2×</text>
+  <path d="M852 490 H 812" class="line" marker-end="url(#arrow)"/>
+  <path d="M640 490 H 592" class="line" marker-end="url(#arrow)"/>
+  <path d="M424 356 V 414" class="line-dash" marker-end="url(#arrow)"/>
+  <text x="434" y="392" class="tiny">missing details:</text>
+  <text x="434" y="406" class="tiny">one clarifying question</text>
+
+  <!-- shared building blocks -->
+  <text x="344" y="578" class="box-title">Shared building blocks</text>
+  <rect x="344" y="590" width="176" height="62" rx="10" fill="#ffffff" stroke="#dde3ea"/>
+  <text x="358" y="612" class="box-title">LLM client</text>
+  <text x="358" y="630" class="box-text">fallback · JSON schema</text>
+  <text x="358" y="644" class="box-text">check · repair · cache</text>
+  <rect x="530" y="590" width="176" height="62" rx="10" fill="#ffffff" stroke="#dde3ea"/>
+  <text x="544" y="612" class="box-title">Cache &amp; rate limits</text>
+  <text x="544" y="630" class="box-text">every outside call;</text>
+  <text x="544" y="644" class="box-text">timeouts and retries</text>
+  <rect x="716" y="590" width="176" height="62" rx="10" fill="#ffffff" stroke="#dde3ea"/>
+  <text x="730" y="612" class="box-title">Realism rules</text>
+  <text x="730" y="630" class="box-text">road speeds, daily driving</text>
+  <text x="730" y="644" class="box-text">limit, lunch, opening hours</text>
+  <rect x="902" y="590" width="158" height="62" rx="10" fill="#ffffff" stroke="#dde3ea"/>
+  <text x="916" y="612" class="box-title">Sign-in check</text>
+  <text x="916" y="630" class="box-text">Supabase tokens (JWKS),</text>
+  <text x="916" y="644" class="box-text">owner-only trips</text>
+
+  <!-- ========== RIGHT: models, data, supabase ========== -->
+  <!-- AI models -->
+  <rect x="1140" y="110" width="420" height="150" rx="16" fill="#ffffff" stroke="#e2552f" stroke-width="1.6" filter="url(#shadow)"/>
+  <text x="1162" y="140" class="group-title">AI MODELS</text>
+  <text x="1262" y="140" class="group-sub">read · rank · group only, never facts</text>
+  <rect x="1162" y="156" width="378" height="44" rx="10" fill="#fde7df"/>
+  <text x="1178" y="176" class="box-title">NVIDIA Nemotron  (primary)</text>
+  <text x="1178" y="192" class="box-text">planner: Ultra 550B · extract: Bolt</text>
+  <rect x="1162" y="206" width="378" height="44" rx="10" fill="#fff4ef"/>
+  <text x="1178" y="226" class="box-title">Groq gpt-oss  (fallback)</text>
+  <text x="1178" y="242" class="box-text">planner: 120B · extract: 20B</text>
+
+  <!-- data services -->
+  <rect x="1140" y="285" width="420" height="270" rx="16" fill="#ffffff" stroke="#0b6b63" stroke-width="1.6" filter="url(#shadow)"/>
+  <text x="1162" y="315" class="group-title">DATA SERVICES</text>
+  <text x="1295" y="315" class="group-sub">the only source of facts · all cached</text>
+  <g>
+    <rect x="1162" y="330" width="378" height="38" rx="9" fill="#e3f2ef"/>
+    <text x="1178" y="354" class="box-title">Nominatim</text><text x="1280" y="354" class="box-text">geocoding (cities table first)</text>
+    <rect x="1162" y="374" width="378" height="56" rx="9" fill="#e3f2ef"/>
+    <text x="1178" y="396" class="box-title">Places</text><text x="1280" y="396" class="box-text">Overpass (OpenStreetMap)</text>
+    <text x="1280" y="414" class="box-text">→ cache → Geoapify → Wikipedia</text>
+    <rect x="1162" y="436" width="378" height="38" rx="9" fill="#e3f2ef"/>
+    <text x="1178" y="460" class="box-title">OSRM</text><text x="1280" y="460" class="box-text">road routes · times capped for India</text>
+    <rect x="1162" y="480" width="378" height="38" rx="9" fill="#e3f2ef"/>
+    <text x="1178" y="504" class="box-title">Open-Meteo</text><text x="1280" y="504" class="box-text">forecast or 5-year typical weather</text>
+    <text x="1178" y="540" class="tiny">+ Wikipedia summaries · curated cost table in Postgres</text>
+  </g>
+
+  <!-- supabase -->
+  <rect x="1140" y="580" width="420" height="90" rx="16" fill="#ffffff" stroke="#3a6ea5" stroke-width="1.6" filter="url(#shadow)"/>
+  <text x="1162" y="608" class="group-title">SUPABASE</text>
+  <rect x="1162" y="620" width="230" height="40" rx="9" fill="#e8f0fb"/>
+  <text x="1176" y="637" class="box-title">Postgres</text>
+  <text x="1176" y="652" class="box-text">trips · cost table · cities · cache</text>
+  <rect x="1400" y="620" width="140" height="40" rx="9" fill="#e8f0fb"/>
+  <text x="1414" y="637" class="box-title">Auth</text>
+  <text x="1414" y="652" class="box-text">email magic link</text>
+
+  <!-- api -> right column -->
+  <path d="M1080 186 H 1138" class="line" marker-end="url(#arrow)"/>
+  <path d="M1080 420 H 1138" class="line" marker-end="url(#arrow)"/>
+  <path d="M1080 640 H 1138" class="line" marker-end="url(#arrow)"/>
+  <rect x="1086" y="626" width="48" height="12" class="edge-bg"/>
+  <text x="1110" y="636" text-anchor="middle" class="tiny">pooler</text>
+
+  <!-- website -> supabase auth (sign in) -->
+  <path d="M264 560 V 690 H 1470 V 662" class="line-dash" marker-end="url(#arrow)"/>
+  <rect x="640" y="682" width="120" height="16" class="edge-bg" fill="#f6f7f9" style="fill:#f6f7f9"/>
+  <text x="700" y="694" text-anchor="middle" class="edge">sign in (browser)</text>
+
+  <!-- ========== LEGEND + PRINCIPLES ========== -->
+  <rect x="40" y="722" width="1520" height="96" rx="14" fill="#ffffff" stroke="#dde3ea"/>
+  <rect x="64" y="746" width="22" height="16" rx="4" fill="#fde7df" stroke="#e2552f"/>
+  <text x="96" y="759" class="box-text">AI step: returns IDs or labels only, checked by Python</text>
+  <rect x="64" y="776" width="22" height="16" rx="4" fill="#e3f2ef" stroke="#0b6b63"/>
+  <text x="96" y="789" class="box-text">Python step: no AI, deterministic</text>
+  <line x1="470" y1="754" x2="510" y2="754" class="line" marker-end="url(#arrow)"/>
+  <text x="520" y="759" class="box-text">data / request flow</text>
+  <line x1="470" y1="784" x2="510" y2="784" class="line-dash"/>
+  <text x="520" y="789" class="box-text">optional path</text>
+  <text x="760" y="752" class="box-title">Grounding rules</text>
+  <text x="760" y="772" class="box-text">• Every place, route, time, weather and price comes from a data service or the cost table, with a source link.</text>
+  <text x="760" y="790" class="box-text">• AI picks only from given IDs; unknown IDs are dropped. Python does all arithmetic and scheduling.</text>
+  <text x="760" y="808" class="box-text">• Missing data shows as "not available"; it is never guessed.</text>
+
+  <!-- ========== DEPLOYMENT STRIP ========== -->
+  <text x="40" y="858" class="group-title">DEPLOYMENT</text>
+  <rect x="40" y="872" width="230" height="78" rx="12" fill="#0f2233"/>
+  <text x="58" y="900" class="white-title">GitHub</text>
+  <text x="58" y="920" class="white-text" style="fill:#c4d1dc">trevorphix001/travelmate</text>
+  <text x="58" y="938" class="white-text" style="fill:#c4d1dc">push to main</text>
+  <path d="M270 911 H 318" class="line" marker-end="url(#arrow)"/>
+  <rect x="320" y="872" width="760" height="78" rx="12" fill="#ffffff" stroke="#0b6b63" stroke-width="1.6"/>
+  <text x="340" y="898" class="box-title">Render (render.yaml blueprint)</text>
+  <rect x="340" y="908" width="330" height="32" rx="8" fill="#e3f2ef"/>
+  <text x="354" y="929" class="box-text"><tspan font-weight="700" fill="#0f2233">travelmate-web</tspan> · static site, web/ folder</text>
+  <rect x="686" y="908" width="378" height="32" rx="8" fill="#e3f2ef"/>
+  <text x="700" y="929" class="box-text"><tspan font-weight="700" fill="#0f2233">travelmate-api</tspan> · uvicorn, Python 3.13, free plan</text>
+  <path d="M1080 911 H 1138" class="line" marker-end="url(#arrow)"/>
+  <rect x="1140" y="872" width="420" height="78" rx="12" fill="#ffffff" stroke="#3a6ea5" stroke-width="1.6"/>
+  <text x="1160" y="900" class="box-title">Supabase · Session pooler (IPv4)</text>
+  <text x="1160" y="920" class="box-text">Secrets live in Render's dashboard and local .env,</text>
+  <text x="1160" y="938" class="box-text">never in the repository.</text>
+</svg>

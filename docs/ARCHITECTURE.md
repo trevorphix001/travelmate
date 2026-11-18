@@ -8,6 +8,10 @@ prices come only from external data services or the curated cost table. The lang
 *read* the request, *rank* candidate place IDs and *group* IDs into days. Python validates every
 model answer, does all arithmetic and schedules every minute of the day.
 
+![TravelMate system architecture](architecture.png)
+
+*Vector version: [architecture.svg](architecture.svg). The sections below explain each part.*
+
 ---
 
 ## 1. System overview

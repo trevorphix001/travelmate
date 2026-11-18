@@ -14,6 +14,10 @@ the LLM invents is dropped, and every item shown carries a `source` and a `confi
 
 ## Architecture
 
+![TravelMate system architecture](docs/architecture.png)
+
+Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Pipeline at a glance:
+
 ```
 Supervisor (LLM, extract) ─► Geo ─┬─► Research (Overpass + LLM rank by ID) ─┐
                                   ├─► Weather (Open-Meteo)                   ├─► Itinerary (LLM groups IDs; Python schedules)
