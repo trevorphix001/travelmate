@@ -1,0 +1,84 @@
+/* TravelMate design tokens. Colour pairs keep WCAG AA contrast in both schemes. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f0f3f6;
+  --surface-3: #e6ebf1;
+  --ink: #0f2233;          /* headings */
+  --text: #26394b;
+  --muted: #5d6f80;
+  --border: #dde3ea;
+  --brand: #0b6b63;        /* deep teal, 6.4:1 on white */
+  --brand-ink: #ffffff;
+  --brand-soft: #e3f2ef;
+  --cta: #e2552f;          /* sunset coral for primary actions, 4.6:1 with white text */
+  --cta-hover: #c94520;
+  --cta-ink: #ffffff;
+  --gold: #b7791f;
+  --ok: #1d7a3e;
+  --ok-soft: #e5f4ea;
+  --warn: #8a5300;
+  --warn-soft: #fff4e0;
+  --danger: #b3261e;
+  --danger-soft: #fdeceb;
+  --info-soft: #e8f0fb;
+  --focus: #1f5fbf;
+  --highlight: #fff1a8;
+  --overlay: linear-gradient(180deg, rgb(8 20 32 / .15) 0%, rgb(8 20 32 / .55) 60%, rgb(8 20 32 / .78) 100%);
+
+  --cat-transport: #3a6ea5;
+  --cat-stay: #8a4fa3;
+  --cat-food: #d06a2b;
+  --cat-local: #2f8a7a;
+  --cat-activities: #b0503a;
+
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px; --s8: 72px;
+  --radius-lg: 20px;
+  --radius: 14px;
+  --radius-sm: 9px;
+  --shadow-sm: 0 1px 2px rgb(15 34 51 / .06);
+  --shadow: 0 2px 6px rgb(15 34 51 / .06), 0 12px 32px rgb(15 34 51 / .08);
+  --shadow-lg: 0 18px 48px rgb(15 34 51 / .18);
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+  --display: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --maxw: 1200px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d151c;
+    --surface: #141f29;
+    --surface-2: #1a2734;
+    --surface-3: #22313f;
+    --ink: #eef3f7;
+    --text: #d6e0e8;
+    --muted: #9fb0bf;
+    --border: #2a3a48;
+    --brand: #4fc7b5;
+    --brand-ink: #062621;
+    --brand-soft: #143832;
+    --cta: #ff7a55;
+    --cta-hover: #ff9474;
+    --cta-ink: #1d0b05;
+    --gold: #f0c36a;
+    --ok: #7fd18f;
+    --ok-soft: #173525;
+    --warn: #f0b860;
+    --warn-soft: #3a2c12;
+    --danger: #ff8a80;
+    --danger-soft: #3d1c1a;
+    --info-soft: #18263a;
+    --focus: #8ab4ff;
+    --highlight: #5a4d00;
+    --cat-transport: #7aa7d8;
+    --cat-stay: #c08ad6;
+    --cat-food: #f0a56c;
+    --cat-local: #6cc6b5;
+    --cat-activities: #e3917a;
+    --shadow-sm: none;
+    --shadow: 0 1px 0 rgb(255 255 255 / .03);
+    --shadow-lg: 0 18px 48px rgb(0 0 0 / .5);
+    color-scheme: dark;
+  }
+}

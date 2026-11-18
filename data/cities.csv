@@ -1,0 +1,58 @@
+name,state,tier,lat,lon
+Guwahati,Assam,2,26.1806,91.75394
+Shillong,Meghalaya,2,25.57599,91.88279
+Sohra,Meghalaya,3,25.27773,91.72924
+Dawki,Meghalaya,3,25.18563,92.02157
+Mawlynnong,Meghalaya,3,25.20195,91.91551
+Tawang,Arunachal Pradesh,3,27.58792,91.86373
+Gangtok,Sikkim,2,27.32905,88.61227
+Pelling,Sikkim,3,27.30037,88.23565
+Darjeeling,West Bengal,2,27.03776,88.26318
+Kohima,Nagaland,3,25.66188,94.10192
+Imphal,Manipur,3,24.79912,93.93644
+Aizawl,Mizoram,3,23.72776,92.71799
+Agartala,Tripura,3,23.83124,91.28238
+Itanagar,Arunachal Pradesh,3,27.09797,93.62373
+Tezpur,Assam,3,26.62299,92.79761
+Jorhat,Assam,3,26.75779,94.20796
+Ziro,Arunachal Pradesh,3,27.53867,93.81535
+Dibrugarh,Assam,3,27.48446,94.90194
+Kaziranga,Assam,3,26.587,93.41058
+Majuli,Assam,3,26.98031,94.15745
+Shimla,Himachal Pradesh,2,31.10404,77.17079
+Manali,Himachal Pradesh,2,32.24546,77.18729
+Mussoorie,Uttarakhand,2,30.4569,78.07829
+Nainital,Uttarakhand,2,29.295,79.41625
+Ooty,Tamil Nadu,2,11.41268,76.70305
+Munnar,Kerala,2,10.087,77.06009
+Kodaikanal,Tamil Nadu,2,10.23371,77.49197
+Mount Abu,Rajasthan,3,24.59243,72.70819
+Dharamshala,Himachal Pradesh,2,32.2143,76.31967
+Madikeri,Karnataka,3,12.42149,75.73875
+Lonavala,Maharashtra,3,18.75037,73.40694
+Mahabaleshwar,Maharashtra,3,17.92428,73.65758
+Delhi,Delhi,1,28.6139,77.20901
+Mumbai,Maharashtra,1,19.055,72.8692
+Kolkata,West Bengal,1,22.57265,88.3639
+Chennai,Tamil Nadu,1,13.08009,80.2808
+Bengaluru,Karnataka,1,12.97679,77.59008
+Hyderabad,Telangana,1,17.36059,78.47406
+Agra,Uttar Pradesh,2,27.17526,78.00982
+Jaipur,Rajasthan,2,26.91546,75.81898
+Udaipur,Rajasthan,2,24.57872,73.68626
+Jodhpur,Rajasthan,2,26.29677,73.03514
+Varanasi,Uttar Pradesh,2,25.33565,83.00763
+Hampi,Karnataka,3,15.3358,76.46102
+Mysuru,Karnataka,2,12.30415,76.65295
+Khajuraho,Madhya Pradesh,3,24.85151,79.92598
+Amritsar,Punjab,2,31.63567,74.87875
+Panaji,Goa,2,15.49899,73.82821
+Rishikesh,Uttarakhand,2,30.10865,78.29162
+Haridwar,Uttarakhand,2,29.93845,78.1453
+Puducherry,Puducherry,2,10.91565,79.80695
+Kochi,Kerala,2,9.9679,76.24444
+Alappuzha,Kerala,3,9.50034,76.41234
+Leh,Ladakh,3,34.00411,77.65735
+Srinagar,Jammu and Kashmir,2,34.07474,74.82044
+Puri,Odisha,3,19.80761,85.82525
+Bhubaneswar,Odisha,2,20.2603,85.83945

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Plan realistic trips across India: real places, honest travel times, day-by-day itineraries and a clear cost estimate.">
+  <title>TravelMate – Plan your next trip in India</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230b6b63'/%3E%3Cpath d='M21 11l-3 7-7 3 3-7z' fill='white'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
+  <link rel="stylesheet" href="css/tokens.css?v=8">
+  <link rel="stylesheet" href="css/app.css?v=8">
+  <script type="module" src="js/app.js?v=8"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="#/" aria-label="TravelMate home">
+        <span class="brand-mark"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg></span>
+        <span>Travel<b>Mate</b></span>
+      </a>
+      <nav class="main-nav" id="main-nav" aria-label="Main">
+        <a href="#/" data-nav="home">Plan a trip</a>
+        <a href="#/destinations" data-nav="destinations">Destinations</a>
+        <a href="#/ideas" data-nav="ideas">Trip ideas</a>
+        <a href="#/plans" data-nav="my-plans">My trips</a>
+      </nav>
+      <div class="header-actions" id="auth-box"></div>
+      <button type="button" class="btn-ghost menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Menu">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section id="home" class="view" hidden></section>
+    <section id="progress" class="view" hidden></section>
+    <section id="plan" class="view" hidden></section>
+    <section id="my-plans" class="view" hidden></section>
+    <section id="eval" class="view" hidden></section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="#/" style="color:#fff"><span class="brand-mark"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg></span><span>Travel<b>Mate</b></span></a>
+          <p>Day-by-day trip plans with real places, honest travel times and a clear cost estimate.</p>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <ul><li><a href="#/destinations">Destinations</a></li><li><a href="#/ideas">Trip ideas</a></li><li><a href="#/">Plan a trip</a></li></ul>
+        </div>
+        <div>
+          <h4>Your account</h4>
+          <ul><li><a href="#/plans">My trips</a></li><li><a href="#/eval">How we evaluate plans</a></li></ul>
+        </div>
+        <div>
+          <h4>Data &amp; credits</h4>
+          <ul>
+            <li>Map data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a></li>
+            <li><a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a> (CC BY 4.0)</li>
+            <li>Routing by <a href="https://project-osrm.org/">OSRM</a></li>
+            <li>Photos &amp; summaries from <a href="https://commons.wikimedia.org/">Wikipedia / Wikimedia Commons</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>Prices are estimates, not live quotes. Check timings and fares before you travel.</span>
+        <span id="health" aria-live="polite"></span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

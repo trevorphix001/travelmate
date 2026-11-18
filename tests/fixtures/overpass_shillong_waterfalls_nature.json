@@ -1,0 +1,249 @@
+{
+ "version": 0.6,
+ "generator": "Overpass API 0.7.62.11 87bfad18",
+ "osm3s": {
+  "timestamp_osm_base": "2026-11-18T04:59:50Z",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+ },
+ "elements": [
+  {
+   "type": "node",
+   "id": 245735780,
+   "lat": 25.5759931,
+   "lon": 91.8827872,
+   "tags": {
+    "capital": "4",
+    "is_capital": "state",
+    "is_in:country": "India",
+    "is_in:country_code": "IN",
+    "name": "Shillong",
+    "name:ar": "شيلونغ",
+    "name:bn": "শিলং",
+    "name:cs": "Šillong",
+    "name:de": "Shillong",
+    "name:en": "Shillong",
+    "name:es": "Shillong",
+    "name:fa": "شیلونگ",
+    "name:fr": "Shillong",
+    "name:hi": "शिलांग",
+    "name:ja": "シロン",
+    "name:kn": "ಶಿಲ್ಲಾಂಗ್",
+    "name:ko": "실롱",
+    "name:ml": "ഷില്ലോങ്ങ്",
+    "name:mr": "शिलाँग",
+    "name:ne": "सिलोङ",
+    "name:ru": "Шиллонг",
+    "name:ta": "ஷில்லாங்",
+    "name:uk": "Шиллонґ",
+    "name:ur": "شیلانگ",
+    "name:zh": "西隆",
+    "place": "city",
+    "population": "143000",
+    "postal_code": "793001",
+    "tourism": "attraction",
+    "wikidata": "Q207752",
+    "wikipedia": "en:Shillong"
+   }
+  },
+  {
+   "type": "node",
+   "id": 3448029577,
+   "lat": 25.5474118,
+   "lon": 91.874989,
+   "tags": {
+    "name": "Shillong Peak View Point",
+    "tourism": "viewpoint"
+   }
+  },
+  {
+   "type": "node",
+   "id": 4411556890,
+   "lat": 25.6053036,
+   "lon": 91.8803238,
+   "tags": {
+    "addr:street": "Nehu",
+    "name": "Indira Gandhi National Open University",
+    "tourism": "attraction"
+   }
+  },
+  {
+   "type": "node",
+   "id": 4571342649,
+   "lat": 25.5378683,
+   "lon": 91.8220559,
+   "tags": {
+    "name": "Kshaid Lai Pateng",
+    "name:en": "Elephant Falls",
+    "tourism": "attraction",
+    "waterway": "waterfall"
+   }
+  },
+  {
+   "type": "node",
+   "id": 5380913853,
+   "lat": 25.4814778,
+   "lon": 91.9311094,
+   "tags": {
+    "name": "Thangsning",
+    "tourism": "attraction",
+    "waterway": "waterfall"
+   }
+  },
+  {
+   "type": "node",
+   "id": 5380914137,
+   "lat": 25.5307653,
+   "lon": 91.849528,
+   "tags": {
+    "ele": "1964",
+    "name": "Shillong",
+    "natural": "peak"
+   }
+  },
+  {
+   "type": "node",
+   "id": 5380914138,
+   "lat": 25.4728347,
+   "lon": 91.9227509,
+   "tags": {
+    "ele": "1913",
+    "name": "Rableng Hill",
+    "natural": "peak",
+    "tourism": "attraction"
+   }
+  },
+  {
+   "type": "node",
+   "id": 5380914438,
+   "lat": 25.4488186,
+   "lon": 91.9114374,
+   "tags": {
+    "name": "Laitlum Grand Canyon",
+    "name:bn": "লাইটলুম গ্র্যান্ড ক্যানিয়ন",
+    "name:en": "Laitlum Grand Canyon",
+    "name:hi": "लैटलम ग्रांड कैन्यन",
+    "tourism": "viewpoint"
+   }
+  },
+  {
+   "type": "node",
+   "id": 5380914650,
+   "lat": 25.4446515,
+   "lon": 91.8959261,
+   "tags": {
+    "name": "Lumheh Laitkyrhong View Point",
+    "tourism": "viewpoint"
+   }
+  },
+  {
+   "type": "node",
+   "id": 5381238657,
+   "lat": 25.5606874,
+   "lon": 91.9585463,
+   "tags": {
+    "name": "Sweet Falls",
+    "tourism": "attraction",
+    "waterway": "waterfall"
+   }
+  },
+  {
+   "type": "node",
+   "id": 5381238666,
+   "lat": 25.5649508,
+   "lon": 91.9562303,
+   "tags": {
+    "name": "Sweet Falls View Point",
+    "tourism": "viewpoint"
+   }
+  },
+  {
+   "type": "node",
+   "id": 5381238925,
+   "lat": 25.5088656,
+   "lon": 91.9380194,
+   "tags": {
+    "name": "Rengthiam",
+    "tourism": "attraction",
+    "waterway": "waterfall"
+   }
+  },
+  {
+   "type": "node",
+   "id": 7025305787,
+   "lat": 25.6015239,
+   "lon": 91.8573209,
+   "tags": {
+    "name": "Beadon Bishop Viewpoint",
+    "tourism": "viewpoint"
+   }
+  },
+  {
+   "type": "node",
+   "id": 7025361585,
+   "lat": 25.5684009,
+   "lon": 91.8913797,
+   "tags": {
+    "name": "Cathedral of Mary Help of Christians",
+    "tourism": "attraction"
+   }
+  },
+  {
+   "type": "node",
+   "id": 11350459036,
+   "lat": 25.5404115,
+   "lon": 91.8213333,
+   "tags": {
+    "leisure": "park",
+    "name": "Matilang Park"
+   }
+  },
+  {
+   "type": "way",
+   "id": 275648471,
+   "center": {
+    "lat": 25.5658824,
+    "lon": 91.8811377
+   },
+   "tags": {
+    "leisure": "park",
+    "name": "Lady Hydari Park"
+   }
+  },
+  {
+   "type": "way",
+   "id": 344537988,
+   "center": {
+    "lat": 25.5713836,
+    "lon": 91.8714422
+   },
+   "tags": {
+    "name": "Rhino Museum",
+    "tourism": "attraction"
+   }
+  },
+  {
+   "type": "way",
+   "id": 904209025,
+   "center": {
+    "lat": 25.5170245,
+    "lon": 91.8791565
+   },
+   "tags": {
+    "leisure": "park",
+    "name": "Mercury Environmental Lake"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1223707933,
+   "center": {
+    "lat": 25.5476781,
+    "lon": 91.8413499
+   },
+   "tags": {
+    "leisure": "park",
+    "name": "Tea Garden"
+   }
+  }
+ ]
+}
