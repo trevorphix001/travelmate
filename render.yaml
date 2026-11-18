@@ -1,4 +1,5 @@
-# Render Blueprint for the TravelMate API (https://render.com/docs/blueprint-spec).
+# Render Blueprint for TravelMate: the API (web service) and the website (static site).
+# Spec: https://render.com/docs/blueprint-spec
 # Secrets use `sync: false`: Render asks for them in the dashboard and they never live in this repo.
 services:
   - type: web
@@ -26,7 +27,7 @@ services:
       - key: SUPABASE_URL
         value: https://bgvphduyjtotpkvnoaxm.supabase.co
       - key: CORS_ORIGINS
-        value: https://trevorphix001.github.io
+        value: https://travelmate-web.onrender.com
       - key: LLM_PRIMARY
         value: nvidia
       - key: LLM_FALLBACKS
@@ -39,3 +40,14 @@ services:
         value: openai/gpt-oss-120b
       - key: MODEL_EXTRACT_GROQ
         value: openai/gpt-oss-20b
+
+  # The website: plain files from web/, served free from Render's CDN (static sites don't sleep).
+  - type: web
+    name: travelmate-web
+    runtime: static
+    staticPublishPath: ./web
+    buildCommand: echo "static site, nothing to build"
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
