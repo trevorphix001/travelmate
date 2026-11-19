@@ -19,6 +19,8 @@ FORECAST_HORIZON_DAYS = 16  # Open-Meteo forecast_days maximum
 # so the last forecast day we ask for is kept one day inside the window.
 SAFETY_DAYS = 1
 NORMAL_YEARS = 5
+WET_MM = 2.5  # India Meteorological Department "rainy day" threshold
+WET_WINDOW = 7  # climatological p_wet pools +/-7 calendar days across the years
 ATTRIBUTION = "Weather data by Open-Meteo.com (CC BY 4.0)"
 
 # WMO weather interpretation codes, from the Open-Meteo forecast API docs.
@@ -63,6 +65,7 @@ async def _forecast(lat: float, lon: float, start: date, end: date) -> list[DayW
         DayWeather(date=date.fromisoformat(t), kind="forecast", code=d["weather_code"][i],
                    label=label(d["weather_code"][i]), tmax_c=d["temperature_2m_max"][i],
                    tmin_c=d["temperature_2m_min"][i], precip_prob=d["precipitation_probability_max"][i],
+                   p_wet=(d["precipitation_probability_max"][i] or 0) / 100,
                    source=src, confidence=Confidence.verified)
         for i, t in enumerate(d["time"])
     ]
@@ -79,11 +82,13 @@ async def _climate_normal(lat: float, lon: float, start: date, end: date) -> lis
     """Average the same calendar dates over the last NORMAL_YEARS years from the archive API."""
     days = _dates(start, end)
     per_day: dict[date, list[tuple]] = {d: [] for d in days}
+    wet: dict[date, list[bool]] = {d: [] for d in days}
     urls = []
     # Count back from the last full year so every archive date is in the past.
     first_back = max(1, start.year - date.today().year + 1)
     for back in range(first_back, first_back + NORMAL_YEARS):
         s, e = _shift_year(start, back), _shift_year(end, back)
+        s, e = s - timedelta(days=WET_WINDOW), e + timedelta(days=WET_WINDOW)  # +/-7 days for p_wet
         params = {"latitude": round(lat, 4), "longitude": round(lon, 4), "timezone": "Asia/Kolkata",
                   "daily": "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum",
                   "start_date": s.isoformat(), "end_date": e.isoformat()}
@@ -91,9 +96,19 @@ async def _climate_normal(lat: float, lon: float, start: date, end: date) -> lis
         data = await cache.get_or_fetch("open_meteo", {"u": ARCHIVE_URL, **params},
                                         lambda p=params: get_json("open_meteo", ARCHIVE_URL, p), timedelta(days=30))
         dd = data["daily"]
-        for i, d in enumerate(days[: len(dd["time"])]):
-            per_day[d].append((dd["weather_code"][i], dd["temperature_2m_max"][i],
-                               dd["temperature_2m_min"][i], dd["precipitation_sum"][i]))
+        at = {t: j for j, t in enumerate(dd["time"])}
+        for i, d in enumerate(days):
+            centre = _shift_year(d, back)
+            j = at.get(centre.isoformat())
+            if j is None and i < len(dd["time"]):
+                j = i  # response does not cover the padded dates: fall back to position
+            if j is not None:
+                per_day[d].append((dd["weather_code"][j], dd["temperature_2m_max"][j],
+                                   dd["temperature_2m_min"][j], dd["precipitation_sum"][j]))
+            for k in range(-WET_WINDOW, WET_WINDOW + 1):
+                j = at.get((centre + timedelta(days=k)).isoformat())
+                if j is not None and dd["precipitation_sum"][j] is not None:
+                    wet[d].append(dd["precipitation_sum"][j] >= WET_MM)
     src = Source(name=f"{ATTRIBUTION}; {NORMAL_YEARS}-year average, typical not a forecast",
                  url=urls[0] if urls else ARCHIVE_URL, retrieved_at=datetime.now(UTC))
     out = []
@@ -109,6 +124,7 @@ async def _climate_normal(lat: float, lon: float, start: date, end: date) -> lis
             tmax_c=round(mean(r[1] for r in rows if r[1] is not None), 1),
             tmin_c=round(mean(r[2] for r in rows if r[2] is not None), 1),
             precip_mm=round(mean(r[3] for r in rows if r[3] is not None), 1),
+            p_wet=round(sum(wet[d]) / len(wet[d]), 2) if wet[d] else None,
             source=src, confidence=Confidence.estimated,
         ))
     return out

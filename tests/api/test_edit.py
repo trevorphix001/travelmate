@@ -86,3 +86,49 @@ async def test_replace_on_arrival_day_explains_limit(client, llm, saved):
     llm.edit = lambda p: {"op": "replace_stop", "args": {"date": d, "place_id": pid}}
     out = await edit(client, saved["id"])
     assert out.get("plan") or "driving limits" in out["question"]
+
+
+async def test_stateless_edit_round_trip(client, llm, saved):
+    """Browser storage mode: the browser sends the whole plan; nothing is read from or written to a DB."""
+    d, pid = first_stop(saved)
+    llm.edit = lambda p: {"op": "remove_stop", "args": {"date": d, "place_id": pid}}
+    body = {k: v for k, v in saved.items() if k not in ("id", "created_at")}
+    r = await client.post("/api/v1/plans/edit", json={"plan": body, "instruction": "remove that stop"})
+    assert r.status_code == 200, r.text
+    out = r.json()
+    assert out["diff"]["removed"] == [pid] and out["plan"]["id"] is None
+
+
+async def test_stateless_edit_rejects_tampered_plan(client, saved):
+    body = {k: v for k, v in saved.items() if k not in ("id", "created_at")}
+    body["budget"]["grand_total"] += 1  # totals must equal the sum of the lines
+    r = await client.post("/api/v1/plans/edit", json={"plan": body, "instruction": "remove that stop"})
+    assert r.status_code == 422
+
+
+async def test_health_reports_browser_storage_without_db(client):
+    h = (await client.get("/api/v1/health")).json()
+    assert h["storage"] == ("server" if h["db"] else "browser") and h["planner"] in ("llm", "robust")
+
+
+async def test_robust_planner_end_to_end(client, llm, monkeypatch):
+    """PLANNER=robust: no itinerary LLM call; days carry a rain chance; every stop is a known place."""
+    from app.core.config import get_settings
+    monkeypatch.setattr(get_settings(), "planner", "robust")
+    llm.supervisor = lambda u: {"request": demo_draft(budget_inr=20000), "missing": []}
+    r = await client.post("/api/v1/plans", json={"query": DEMO_QUERY})
+    assert r.status_code == 201, r.text
+    plan = r.json()
+    known = {p["id"] for p in plan["places"]}
+    assert all(d["rain_chance"] is not None for d in plan["days"])
+    assert {s["place_id"] for d in plan["days"] for s in d["stops"]} <= known
+    assert {i for d in plan["days"] for i in d["plan_b"]} <= known
+    assert "ItinOut" not in llm.calls
+
+
+async def test_reference_data_from_csv_without_db():
+    from app.db import repo
+    rows = await repo.get_cost_rows(2, "v1")
+    assert rows and all(r.city_tier in (0, 2) for r in rows)
+    assert (await repo.get_city("shillong")).state == "Meghalaya"
+    assert [c.name for c in await repo.search_cities("Shil")] == ["Shillong"]

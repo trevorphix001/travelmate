@@ -10,6 +10,7 @@ from datetime import date, timedelta
 from pydantic import BaseModel
 
 from app.agents.durations import visit_minutes
+from app.core.config import get_settings
 from app.core.errors import AppError
 from app.llm import prompts
 from app.llm.client import complete_json
@@ -28,6 +29,7 @@ MAX_INTERCITY_MIN = 8 * 60
 # Total road time per day a traveller will accept, including the intercity trip on arrival and departure
 # days. Beyond this a day is a road trip, not sightseeing.
 MAX_DRIVE_MIN = {Pace.relaxed: 3 * 60, Pace.normal: 4 * 60, Pace.packed: 5 * 60}
+LIVE_SOLVE_S = 20.0  # robust planner wall-clock cap per request (the plan is still feasible if hit)
 MIN_LOCAL_DRIVE = 60  # arrival/departure days still allow a short loop near the stay
 OUTDOOR_KINDS = {"waterfall", "peak", "viewpoint", "park", "nature_reserve", "cave_entrance"}
 _HHMM = re.compile(r"(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})")
@@ -256,6 +258,10 @@ async def build_days(req: TripRequest, cands: list[Place], weather: list[DayWeat
                         "cluster_id": groups.get(p.id, 0), "drive_min": m[0][idx[p.id]].minutes} for p in cands],
     }
     notes_by_date: dict[str, str] = {}
+    if get_settings().planner == "robust" and cands:
+        days = await _robust_days(req, cands, centre, windows, budgets, weather_by_date, m, by_id, rank,
+                                  chosen, travel, origin_name)
+        return days, trace, warnings
     try:
         out, metric = await complete_json("planner", ItinOut, prompts.ITINERARY_SYSTEM,
                                           json.dumps(payload, ensure_ascii=False), max_tokens=700, temperature=0,
@@ -288,6 +294,40 @@ async def build_days(req: TripRequest, cands: list[Place], weather: list[DayWeat
     theme = {_safe_note(n) for n in notes_by_date.values()} - {None}
     days = [d if d.stops else d.model_copy(update={"notes": [n for n in d.notes if n not in theme]}) for d in days]
     return days, trace, warnings
+
+
+async def _robust_days(req: TripRequest, cands: list[Place], centre: GeoPoint, windows, budgets, weather_by_date,
+                       m: list[list[LegLite]], by_id: dict[str, Place], rank: dict[str, int],
+                       chosen: TransportOption | None, travel: int, origin_name: str) -> list[DayPlan]:
+    """Benders MILP over the same candidates, expected utility under each day's rain chance, plus an
+    indoor Plan B per day (app/planning). No LLM call: the LLM's contribution is the ranked pool."""
+    from app.agents.research import score  # local import: research imports this module's constants
+    from app.planning.model import DayCtx, Instance
+    from app.planning.robust import solve_robust
+
+    p_wet = [(weather_by_date[d].p_wet or 0.0) if d in weather_by_date else 0.0 for d, _, _ in windows]
+    n = len(cands)
+    util = [round(max(0.5, score(p, req, haversine_km(centre.lat, centre.lon, p.lat, p.lon)))
+                  + 0.5 * (1 - rank[p.id] / n), 3) for p in cands]  # tool score + the LLM's ranking
+    inst = Instance(req, cands, util, [[c.minutes for c in row] for row in m],
+                    [DayCtx(d, ws, we, budgets[i], p_wet[i]) for i, (d, ws, we) in enumerate(windows)],
+                    STOPS_PER_DAY[req.pace])
+    res, backups = solve_robust(inst, time_budget=LIVE_SOLVE_S)
+    days = []
+    for i, (d, ws, we) in enumerate(windows):
+        extra = []
+        if travel and i == 0:
+            how = f" by {chosen.mode.replace('_', ' ')}" if chosen else " by road"
+            extra.append(f"Arrive from {origin_name}{how}")
+        if travel and i == len(windows) - 1:
+            extra.append(f"Leave in the afternoon for {origin_name}")
+        ids = [cands[k].id for k in res.days[i]]
+        day = await schedule_day(d, ids, by_id, rank, centre, ws, we, extra, max_drive=budgets[i])
+        days.append(day.model_copy(update={"rain_chance": round(p_wet[i] * 100),
+                                           "plan_b": [cands[k].id for k in backups[i]]}))
+    log.info("robust planner: optimal=%s iterations=%d cuts=%d %.2fs", res.optimal, res.iterations, res.cuts,
+             res.seconds)
+    return days
 
 
 async def refill_days(days: list[DayPlan], windows: list[tuple[date, int, int]], budgets: list[int],

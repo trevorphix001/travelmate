@@ -2,6 +2,13 @@
 import { CONFIG } from "./config.js?v=9";
 import { getAccessToken } from "./auth.js?v=9";
 import { postStream } from "./sse.js?v=9";
+import { localStore } from "./store.js?v=9";
+
+// "browser" when the server runs stateless (no database): trips are kept on this device instead.
+let storage = "server";
+export const storageMode = () => storage;
+export const setStorageMode = (m) => { storage = m === "browser" ? "browser" : "server"; };
+const local = () => storage === "browser";
 
 export class ApiError extends Error {
   constructor(title, detail, status, type) {
@@ -33,14 +40,21 @@ async function call(method, path, body) {
 }
 
 export const api = {
-  health: () => call("GET", "/health"),
+  health: async () => { const h = await call("GET", "/health"); setStorageMode(h.storage); return h; },
   parse: (query) => call("POST", "/plans/parse", { query }),
   createPlan: (body) => call("POST", "/plans", body),
-  savePlan: (plan) => call("POST", "/plans/save", plan),
-  listPlans: () => call("GET", "/plans"),
-  getPlan: (id) => call("GET", `/plans/${encodeURIComponent(id)}`),
-  editPlan: (id, instruction) => call("POST", `/plans/${encodeURIComponent(id)}/edit`, { instruction }),
-  deletePlan: (id) => call("DELETE", `/plans/${encodeURIComponent(id)}`),
+  savePlan: async (plan) => (local() ? localStore.save(plan) : call("POST", "/plans/save", plan)),
+  listPlans: async () => (local() ? localStore.list() : call("GET", "/plans")),
+  getPlan: async (id) => (local() ? localStore.get(id) : call("GET", `/plans/${encodeURIComponent(id)}`)),
+  async editPlan(id, instruction) {
+    if (!local()) return call("POST", `/plans/${encodeURIComponent(id)}/edit`, { instruction });
+    const plan = localStore.get(id);
+    const { id: _id, created_at: _c, ...body } = plan;  // the server validates the plan; ids stay on the device
+    const res = await call("POST", "/plans/edit", { plan: body, instruction });
+    if (res.plan) res.plan = localStore.save({ ...res.plan, id, created_at: plan.created_at });
+    return res;
+  },
+  deletePlan: async (id) => (local() ? localStore.remove(id) : call("DELETE", `/plans/${encodeURIComponent(id)}`)),
   searchPlaces: (q) => call("GET", `/places/search?q=${encodeURIComponent(q)}`),
   weather: (lat, lon, start, end) => call("GET", `/weather?lat=${lat}&lon=${lon}&start=${start}&end=${end}`),
   evalReport: () => call("GET", "/eval/report"),

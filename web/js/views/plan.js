@@ -1,5 +1,5 @@
 // Itinerary page. Renders numbers exactly as the API returns them; JS only formats.
-import { api } from "../api.js?v=9";
+import { api, storageMode } from "../api.js?v=9";
 import { currentUser } from "../auth.js?v=9";
 import { icon, kindIcon } from "../icons.js?v=9";
 import { hydratePhotos, titleFromUrl, wikiPhoto } from "../photos.js?v=9";
@@ -60,7 +60,7 @@ export function renderPlan(el, plan, opts = {}) {
           ${opts.diff ? `<div class="small changed" style="margin-top:6px">Updated: ${rs(opts.diff.old_total)} → ${rs(opts.diff.new_total)}</div>` : ""}
           <div class="actions no-print">
             ${plan.id ? `<button type="button" id="edit-btn" class="btn btn-brand btn-sm" aria-expanded="false" aria-controls="refine">${icon("edit")} Refine trip</button>`
-              : currentUser() ? `<button type="button" id="save-btn" class="btn btn-cta btn-sm">${icon("check")} Save this trip</button>`
+              : (currentUser() || storageMode() === "browser") ? `<button type="button" id="save-btn" class="btn btn-cta btn-sm">${icon("check")} Save this trip</button>`
               : `<button type="button" id="signin-save-btn" class="btn btn-cta btn-sm">${icon("user")} Sign in to save</button>`}
             <button type="button" id="print-btn" class="btn btn-sm">${icon("print")} Print / PDF</button>
           </div>
@@ -71,7 +71,7 @@ export function renderPlan(el, plan, opts = {}) {
 
     <div class="container">
       ${plan.warnings.length ? `<div class="notice" role="status">${icon("info")}<div>${plan.warnings.map((w) => esc(w)).join("<br>")}</div></div>` : ""}
-      ${!plan.id ? `<p class="muted small no-print" id="save-note" style="margin-top:12px">${currentUser() ? "This trip isn't saved yet. Save it to find it later in My trips and refine it." : "Sign in to save this trip and refine it later."}</p>` : ""}
+      ${!plan.id ? `<p class="muted small no-print" id="save-note" style="margin-top:12px">${storageMode() === "browser" ? "This trip isn't saved yet. Save it to keep it in this browser (nothing is stored on a server)." : currentUser() ? "This trip isn't saved yet. Save it to find it later in My trips and refine it." : "Sign in to save this trip and refine it later."}</p>` : ""}
       <div id="refine" class="card refine no-print" hidden style="margin-top:16px"></div>
 
       <div class="trip-layout">
@@ -155,14 +155,19 @@ function dayPanel(d, i, places, w, added, plan) {
 
   const skipped = d.notes.filter((n) => n.startsWith("Skipped "));
   const notes = d.notes.filter((n) => !n.startsWith("Skipped "));
+  const planB = (d.plan_b || []).map((id) => places[id]).filter(Boolean);
+  const rain = d.rain_chance != null ? `<span class="weather-pill" title="Chance this is a rainy day (2.5 mm or more)">${icon("umbrella")} ${d.rain_chance}% rainy-day chance</span>` : "";
+  const planBBox = planB.length ? `<details class="skipped-list plan-b"><summary>${icon("umbrella")} Plan B if it rains: ${plural(planB.length, "indoor stop")}</summary>
+      <ul>${planB.map((p) => `<li>${esc(p.name)} <span class="muted small">(${esc(label(p.kind))})</span></li>`).join("")}</ul></details>` : "";
   const wx = w ? `<span class="weather-pill">${icon(WEATHER_ICON(w.label))} ${esc(w.label)} · ${w.tmin_c ?? "–"}–${w.tmax_c ?? "–"}°C${w.precip_prob != null ? ` · ${w.precip_prob}% rain` : ""}${w.kind === "climate_normal" ? " · typical" : ""}</span>` : "";
   return `<section role="tabpanel" id="day-${i}" aria-labelledby="tab-${i}" class="day-panel card" ${i ? "hidden" : ""}>
-    <div class="day-head"><h2>Day ${i + 1} · ${fmtDate(d.date)}</h2>${wx}</div>
+    <div class="day-head"><h2>Day ${i + 1} · ${fmtDate(d.date)}</h2>${wx}${rain}</div>
     ${notes.map((n) => `<p class="day-note">${esc(n)}</p>`).join("")}
     ${d.stops.length ? `<ol class="timeline">${items.join("")}</ol>`
       : `<p class="muted">A free ${i === plan.days.length - 1 ? "morning before you head home" : "day to relax"}.</p>`}
     ${skipped.length ? `<details class="skipped-list"><summary>${plural(skipped.length, "place")} left out to keep the day comfortable</summary>
       <ul>${skipped.map((n) => `<li>${esc(n.replace(/^Skipped /, ""))}</li>`).join("")}</ul></details>` : ""}
+    ${planBBox}
   </section>`;
 }
 

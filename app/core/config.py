@@ -44,6 +44,10 @@ class Settings(BaseSettings):
     ]
     osrm_url: str = "https://router.project-osrm.org"
     cost_table_version: str = "v1"
+    # Stateless: run with no database at all (plans live in the browser, reference data from data/*.csv).
+    stateless: bool = False
+    # Day planner: "llm" (LLM groups IDs into days) or "robust" (Benders MILP + weather Plan B, app/planning).
+    planner: str = "robust"
     plans_per_minute: int = 5
     plans_per_day: int = 50
 

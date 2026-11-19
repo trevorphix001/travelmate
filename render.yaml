@@ -40,6 +40,10 @@ services:
         value: openai/gpt-oss-120b
       - key: MODEL_EXTRACT_GROQ
         value: openai/gpt-oss-20b
+      - key: PLANNER                # robust = Benders MILP + weather Plan B (app/planning)
+        value: robust
+      - key: STATELESS              # true = no database; trips are saved in the browser
+        value: "false"
 
   # The website: plain files from web/, served free from Render's CDN (static sites don't sleep).
   - type: web

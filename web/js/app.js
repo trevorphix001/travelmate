@@ -123,7 +123,7 @@ async function boot() {
   try {
     const h = await api.health();
     const llm = Object.values(h.providers).some(Boolean);
-    $("health").textContent = !llm ? "Trip planning is temporarily unavailable." : !h.db ? "Saving trips is temporarily unavailable." : "";
+    $("health").textContent = !llm ? "Trip planning is temporarily unavailable." : !h.db && h.storage !== "browser" ? "Saving trips is temporarily unavailable." : "";
   } catch {
     $("health").textContent = "Can't reach the TravelMate server right now.";
   }

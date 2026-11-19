@@ -12,6 +12,31 @@ the LLM invents is dropped, and every item shown carries a `source` and a `confi
 - Spec: [docs/PRD.md](docs/PRD.md) · **architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**
 - Graph: [docs/graph.md](docs/graph.md) · sources and compliance: [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) · [docs/LIMITATIONS.md](docs/LIMITATIONS.md)
 
+## Research extension: TravelMate-R
+
+Three features, each building on a recent paper. Code is in `app/planning/`, experiments in `research/`.
+
+| Feature | What it does | Builds on |
+|---|---|---|
+| Solver-grounded day planning | Logic-based Benders: a MILP (HiGHS) assigns places to days, an exact minute-by-minute day verifier adds no-good cuts, and the loop ends with an optimality certificate. No LLM call in day planning. | Hao et al. 2024 (SMT planning); TTG (Ju et al. 2024); Hooker & Ottosson 2003 |
+| Critic bank | TravelPlanner's constraint evaluator ported to day trips (10 constraints) and its metrics (Delivery, Commonsense/Hard Micro/Macro, Final Pass). The same critics back-prompt the LLM-Modulo baseline. | Xie et al. ICML 2024 (code: OSU-NLP-Group/TravelPlanner, MIT); Kambhampati et al. ICML 2024; Gundawar et al. 2024 |
+| Weather-robust plans | Wet-day probability per day (forecast, or 10-year climatology with the IMD 2.5 mm rule). The solver maximises expected utility and reserves an indoor Plan B for each likely-wet outdoor day. The UI shows the rain chance and the Plan B. | New: existing benchmarks assume the weather is known |
+
+`PLANNER=robust` (default) uses the solver; `PLANNER=llm` restores the LLM day grouping.
+`STATELESS=true` runs with no database at all: reference data comes from `data/*.csv`, caches stay in
+memory, and saved trips live in the browser (`web/js/store.js`). Edits go through the stateless
+`POST /api/v1/plans/edit`.
+
+```powershell
+python -m research.snapshot                                # freeze tool outputs for the 40 eval cases
+python -m research.experiment                              # greedy + solver systems (no LLM)
+python -m research.experiment --llm --provider nvidia      # adds the three LLM systems
+python -m research.report                                  # research/results/report.{md,json}
+python -m research.build_demo                              # research/demo/index.html (self-contained)
+```
+
+Paper draft: [research/PAPER.md](research/PAPER.md) · results: [research/results/report.md](research/results/report.md)
+
 ## Architecture
 
 ![TravelMate system architecture](docs/architecture.png)
@@ -74,6 +99,7 @@ python -m scripts.seed                   # loads data/cost_table.csv and data/ci
 
 ```powershell
 uvicorn app.main:app --reload --port 8000         # API docs at http://127.0.0.1:8000/docs
+$env:STATELESS="true"; uvicorn app.main:app --port 8000   # no database: trips are saved in the browser
 python -m http.server 5500 --directory web        # frontend at http://127.0.0.1:5500
 python -m scripts.run_demo                        # live golden run of the PRD demo request
 ```
@@ -114,7 +140,9 @@ The free API sleeps when idle, so the first request after a while can take up to
 
 ## Status
 
-The backend, LangGraph pipeline, evaluation harness and frontend are implemented, with 157 offline
-tests and a clean ruff run. The full 40-case benchmark is still to do. The cost table
+The backend, LangGraph pipeline, evaluation harness, frontend and the TravelMate-R research extension
+are implemented, with 167 offline tests and a clean ruff run. The research benchmark covers all 40 cases
+in two weather regimes on frozen tool outputs (`research/results/report.md`). The live graph-vs-baseline
+run in `eval/` is still to do. The cost table
 holds preliminary starter prices that the team must replace with researched, cited figures
 (see [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md)).

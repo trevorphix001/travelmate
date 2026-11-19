@@ -1,6 +1,9 @@
 """All SQL lives here. Owner checks are enforced in every user-scoped query (in addition to RLS)."""
+import csv
 import logging
 from datetime import datetime
+from functools import lru_cache
+from pathlib import Path
 from typing import Any
 
 import asyncpg
@@ -12,6 +15,20 @@ from app.schemas.plan import NodeMetric, PlanDiff, PlanSummary, TripPlan
 from app.tools.geo import haversine_km
 
 log = logging.getLogger(__name__)
+DATA = Path(__file__).resolve().parents[2] / "data"
+
+
+@lru_cache(maxsize=1)
+def _csv_costs() -> list[CostRow]:
+    """Stateless mode: the curated cost table ships with the repo (data/cost_table.csv)."""
+    with (DATA / "cost_table.csv").open(encoding="utf-8") as f:
+        return [CostRow(**r) for r in csv.DictReader(f)]
+
+
+@lru_cache(maxsize=1)
+def _csv_cities() -> list[City]:
+    with (DATA / "cities.csv").open(encoding="utf-8") as f:
+        return [City(**r) for r in csv.DictReader(f)]
 
 
 def _require_pool() -> asyncpg.Pool:
@@ -89,7 +106,7 @@ async def add_edit(plan_id: str, instruction: str, diff: PlanDiff) -> None:
 async def get_cost_rows(tier: int, version: str) -> list[CostRow]:
     pool = get_pool()
     if pool is None:
-        return []
+        return [r for r in _csv_costs() if r.version == version and r.city_tier in (0, tier)]
     rows = await pool.fetch(
         "select * from cost_table where version=$1 and city_tier in (0, $2)", version, tier
     )
@@ -99,7 +116,7 @@ async def get_cost_rows(tier: int, version: str) -> list[CostRow]:
 async def get_city(name: str) -> City | None:
     pool = get_pool()
     if pool is None:
-        return None
+        return next((c for c in _csv_cities() if c.name.lower() == name.strip().lower()), None)
     r = await pool.fetchrow("select * from cities where lower(name)=lower($1)", name.strip())
     return City(**dict(r)) if r else None
 
@@ -107,17 +124,18 @@ async def get_city(name: str) -> City | None:
 async def nearby_cities(lat: float, lon: float, max_km: float) -> list[City]:
     """Curated cities within max_km (nearest first). The table is small, so distance is computed in Python."""
     pool = get_pool()
-    if pool is None:
-        return []
-    cities = [City(**dict(r)) for r in await pool.fetch("select * from cities")]
+    cities = _csv_cities() if pool is None else [City(**dict(r)) for r in await pool.fetch("select * from cities")]
     near = [(haversine_km(lat, lon, c.lat, c.lon), c) for c in cities]
     return [c for d, c in sorted(near, key=lambda x: x[0]) if 1 < d <= max_km]
 
 
 async def search_cities(prefix: str, limit: int = 8) -> list[City]:
     pool = get_pool()
-    if pool is None or not prefix.strip():
+    if not prefix.strip():
         return []
+    if pool is None:
+        q = prefix.strip().lower()
+        return sorted((c for c in _csv_cities() if c.name.lower().startswith(q)), key=lambda c: c.name)[:limit]
     rows = await pool.fetch(
         "select * from cities where lower(name) like lower($1) || '%' order by name limit $2",
         prefix.strip(), limit,

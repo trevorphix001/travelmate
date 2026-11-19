@@ -44,6 +44,8 @@ class DayPlan(BaseModel):
     return_leg: Leg | None = None  # last stop back to the stay area
     notes: list[str] = []
     end_time: str | None = None  # when the day actually finishes, computed in Python
+    rain_chance: int | None = None  # percent chance this is a rainy day (app/planning/robust.py)
+    plan_b: list[str] = []  # indoor fallback place IDs for a wet morning (robust planner only)
 
 
 class DayWeather(BaseModel):
@@ -56,6 +58,7 @@ class DayWeather(BaseModel):
     tmin_c: float | None = None
     precip_prob: int | None = None  # percent; forecast only
     precip_mm: float | None = None  # climate normal only
+    p_wet: float | None = None  # probability of a rainy day (>= 2.5 mm): forecast probability or climatology
     source: Source
     confidence: Confidence
 

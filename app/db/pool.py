@@ -17,7 +17,11 @@ async def _init_conn(conn: asyncpg.Connection) -> None:
 async def open_pool() -> asyncpg.Pool | None:
     """Open the global pool if DATABASE_URL is set. Returns None (and logs) otherwise."""
     global _pool
-    dsn = get_settings().database_url
+    st = get_settings()
+    dsn = st.database_url
+    if st.stateless:
+        log.info("stateless mode: no database; reference data from data/*.csv, cache in memory, plans in the browser")
+        return None
     if _pool is None and dsn and dsn.get_secret_value():
         # statement_cache_size=0 keeps us compatible with Supabase's pgbouncer pooler.
         _pool = await asyncpg.create_pool(

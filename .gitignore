@@ -7,3 +7,5 @@ __pycache__/
 .coverage
 htmlcov/
 eval/results/*.tmp
+research/results/*.log
+research/results/*_stdout.txt

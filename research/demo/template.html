@@ -1,0 +1,324 @@
+<title>TravelMate-R</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column (paper), wide figures break out to 1100px; explorer is a two-pane tool. */
+:root {
+  --bg: #f6f8f9; --surface: #ffffff; --ink: #14212b; --muted: #5a6b78; --line: #dbe3e8;
+  --rain: #1f6fb2; --rain-soft: #e3eef8; --sun: #b7791f; --sun-soft: #fbf1df;
+  --ok: #1d7a4f; --ok-soft: #e1f3ea; --bad: #b4382f; --bad-soft: #f9e4e1; --na: #8a98a3;
+  --display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f171d; --surface: #16212a; --ink: #e4ecf1; --muted: #93a4b1; --line: #26343f;
+  --rain: #6aaee8; --rain-soft: #17304a; --sun: #e3a94a; --sun-soft: #3a2c14;
+  --ok: #5fcf98; --ok-soft: #133826; --bad: #f08a80; --bad-soft: #43201d; --na: #6c7c88; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f171d; --surface: #16212a; --ink: #e4ecf1; --muted: #93a4b1; --line: #26343f;
+  --rain: #6aaee8; --rain-soft: #17304a; --sun: #e3a94a; --sun-soft: #3a2c14;
+  --ok: #5fcf98; --ok-soft: #133826; --bad: #f08a80; --bad-soft: #43201d; --na: #6c7c88; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 16px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 64px }
+.col { max-width: 760px; margin-inline: auto; display: grid; gap: 18px }
+.wide { max-width: 1100px; margin-inline: auto }
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0 }
+h1 { font-size: clamp(2rem, 5vw, 3rem); letter-spacing: -0.02em }
+h2 { font-size: 1.45rem; margin-top: 28px }
+h3 { font-size: 1.05rem }
+p { margin: 0 }
+.eyebrow { font: 500 .75rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--rain) }
+.lede { font-size: 1.12rem; color: var(--muted) }
+.abstract { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; display: grid; gap: 10px }
+.abstract b { font-family: var(--display) }
+.contrib { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px }
+.contrib div { border-top: 3px solid var(--rain); padding-top: 10px; display: grid; gap: 6px; min-width: 0 }
+.contrib div:nth-child(2) { border-color: var(--ok) } .contrib div:nth-child(3) { border-color: var(--sun) }
+.contrib small { color: var(--muted); font-size: .85rem }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums }
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface) }
+table { border-collapse: collapse; width: 100%; font-size: .88rem }
+th, td { padding: 8px 10px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap }
+th:first-child, td:first-child { text-align: left }
+thead th { font: 500 .72rem/1.2 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted) }
+tr.ours td { background: var(--rain-soft) } tr.ours td:first-child { font-weight: 600 }
+td.best { font-weight: 700 }
+.cell-ok { background: var(--ok-soft); color: var(--ok) } .cell-bad { background: var(--bad-soft); color: var(--bad) }
+.tabs { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface) }
+.tabs button { font: 500 .85rem var(--body); border: 0; background: none; color: var(--muted); padding: 8px 14px; cursor: pointer }
+.tabs button[aria-pressed="true"] { background: var(--rain); color: var(--surface) }
+button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--rain); outline-offset: 2px }
+.caption { font-size: .85rem; color: var(--muted) }
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between }
+.chart { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px }
+.chart svg { width: 100%; height: auto; display: block }
+.chart text { fill: var(--muted); font: 11px var(--mono) }
+.chart .lbl { fill: var(--ink); font: 500 12px var(--body) }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; display: grid; gap: 2px }
+.stat b { font: 600 1.5rem var(--display) } .stat span { font-size: .8rem; color: var(--muted) }
+/* explorer */
+.explorer { display: grid; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px }
+.controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: end }
+.controls label { display: grid; gap: 4px; font-size: .8rem; color: var(--muted) }
+select, input[type=range] { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; min-width: 0 }
+input[type=range] { padding: 0; accent-color: var(--rain) }
+.days { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px }
+.day { border: 1px solid var(--line); border-radius: 8px; padding: 10px; display: grid; gap: 6px; background: var(--bg); min-width: 0 }
+.day .rain { display: flex; gap: 8px; align-items: center; font: 500 .8rem var(--mono); color: var(--rain) }
+.day input { width: 100% }
+.sys { display: grid; gap: 10px }
+.sysrow { display: grid; grid-template-columns: 170px 1fr; gap: 10px; border-top: 1px solid var(--line); padding-top: 10px }
+@media (max-width: 640px) { .sysrow { grid-template-columns: 1fr } }
+.sysname { display: grid; gap: 4px; align-content: start; min-width: 0 }
+.sysname b { font-family: var(--display) }
+.pill { display: inline-block; font: 500 .72rem var(--mono); padding: 2px 8px; border-radius: 99px; width: max-content }
+.pill.ok { background: var(--ok-soft); color: var(--ok) } .pill.bad { background: var(--bad-soft); color: var(--bad) }
+.pill.na { background: var(--line); color: var(--muted) }
+.plan { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; min-width: 0 }
+.plan ol { margin: 0; padding-left: 18px; font-size: .84rem; display: grid; gap: 2px; min-width: 0 }
+.plan li { overflow-wrap: anywhere }
+.plan .out::marker { color: var(--sun) }
+.plan .b { font-size: .78rem; color: var(--rain); margin-top: 4px }
+.eu { font: 600 1.1rem var(--mono) }
+.bar { height: 6px; border-radius: 3px; background: var(--rain); transition: width .2s }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: .8rem; color: var(--muted) }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px }
+code, pre { font-family: var(--mono); font-size: .85rem }
+pre { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; overflow-x: auto; margin: 0 }
+ol.refs { padding-left: 20px; display: grid; gap: 6px; font-size: .9rem; margin: 0 }
+a { color: var(--rain) }
+@media (prefers-reduced-motion: reduce) { .bar { transition: none } }
+</style>
+
+<div class="col">
+  <span class="eyebrow">Research demo · multi-agent trip planning</span>
+  <h1>TravelMate-R: solver-certified, weather-robust itineraries</h1>
+  <p class="lede">An LLM ranks real places pulled from open data. An exact solver builds the days, a TravelPlanner-style critic bank checks every plan, and each rainy-season day carries an indoor Plan B.</p>
+  <div class="abstract" id="abstract"></div>
+  <div class="contrib">
+    <div><h3>Solver-grounded day planning</h3><small>Logic-based Benders decomposition: a MILP assigns places to days, an exact minute-by-minute day verifier adds no-good cuts, and the loop ends with an optimality certificate.</small></div>
+    <div><h3>Critic bank from TravelPlanner</h3><small>TravelPlanner's commonsense/hard constraint evaluator, ported to day trips (10 constraints). It is used both to score plans and to back-prompt the LLM in LLM-Modulo fashion.</small></div>
+    <div><h3>Weather-robust planning</h3><small>Wet-day probability from 10 years of rainfall (IMD 2.5 mm rule). The solver maximises expected utility and adds an indoor Plan B per day. Benchmarks so far assume the weather is fixed.</small></div>
+  </div>
+</div>
+
+<div class="col">
+  <h2>Pipeline</h2>
+  <div class="scroll" style="padding:12px">
+<pre class="mermaid">
+flowchart LR
+  R["Trip request"] --> S["Supervisor LLM<br/>extracts fields"]
+  S --> T["Tools: OSM, OSRM,<br/>Open-Meteo, costs"]
+  T --> K["Research LLM<br/>ranks place IDs"]
+  T --> W["Wet-day probability<br/>per day"]
+  K --> M["Benders master<br/>MILP (HiGHS)"]
+  W --> M
+  M --> V["Exact day verifier"]
+  V -- "infeasible: no-good cut" --> M
+  V --> B["Plan B per day<br/>(indoor sub-MILP)"]
+  B --> C["Critic bank<br/>10 constraints"]
+  C --> P["Certified plan"]
+</pre>
+  </div>
+  <p class="caption">The LLM never schedules anything. It proposes and ranks candidate IDs that came from tools. Everything after that is exact optimisation and verification.</p>
+</div>
+
+<div class="col">
+  <div class="row"><h2 style="margin:0">Results</h2>
+    <div class="tabs" role="group" aria-label="Weather regime">
+      <button type="button" id="tab-nov" data-season="nov" aria-pressed="true">Nov–Dec dates</button>
+      <button type="button" id="tab-monsoon" data-season="monsoon" aria-pressed="false">Same trips in July</button>
+    </div>
+  </div>
+  <p class="caption" id="season-note"></p>
+  <h3>Table 1. TravelPlanner metrics (%)</h3>
+</div>
+<div class="wide scroll" id="t1"></div>
+<div class="col"><h3>Figure 1. Plan value as % of the best system on the same case</h3></div>
+<div class="wide chart" id="f1"></div>
+<div class="col"><p class="caption">LLM-only plans score high here because they overpack days. Table 2 shows that most of them break the day window or the driving limit, so the traveller could not actually complete them. Among the systems whose plans the checks accept, ours has the highest average value (Table 3).</p></div>
+<div class="col"><h3>Table 2. Per-constraint pass rate (%)</h3></div>
+<div class="wide scroll" id="t4"></div>
+<div class="col"><h3>Table 3. Ours minus each baseline, paired, bootstrap 95% CI</h3></div>
+<div class="wide scroll" id="t3"></div>
+
+<div class="col">
+  <h2>Sensitivity and solver cost</h2>
+  <p>How much a rained-out outdoor stop loses (ρ) is an assumption. Figure 2 sweeps it on the July trips and compares the robust planner with Plan B against the weather-blind MILP.</p>
+</div>
+<div class="wide chart" id="f2"></div>
+<div class="col"><div class="stats" id="solver"></div></div>
+
+<div class="col">
+  <h2>Case explorer</h2>
+  <p>Pick a trip and season, then drag the rain chances or the rain loss. The plans stay fixed. Your browser re-scores each one with the same expected-utility model the paper uses, so you can see where weather-blind plans lose value.</p>
+</div>
+<div class="wide explorer">
+  <div class="controls">
+    <label for="case">Trip<select id="case"></select></label>
+    <label for="xseason">Season<select id="xseason"><option value="nov">Nov–Dec</option><option value="monsoon">July</option></select></label>
+    <label for="rho">Rain loss ρ <span id="rho-v" class="num"></span><input type="range" id="rho" min="0" max="1" step="0.05" value="0.7"></label>
+  </div>
+  <div class="days" id="days"></div>
+  <div class="legend"><span><span class="dot" style="background:var(--sun)"></span>outdoor stop</span><span><span class="dot" style="background:var(--muted)"></span>indoor stop</span><span><span class="dot" style="background:var(--rain)"></span>Plan B if it rains</span></div>
+  <div class="sys" id="sys"></div>
+</div>
+
+<div class="col">
+  <h2>Reproduce</h2>
+<pre>pip install -r requirements.txt
+python -m research.snapshot                 # freeze tool outputs for the 40 eval cases
+python -m research.experiment               # solver + greedy systems (no LLM)
+python -m research.experiment --llm --provider nvidia
+python -m research.report                   # research/results/report.{md,json}
+STATELESS=true PLANNER=robust uvicorn app.main:app   # live app, no database</pre>
+  <p class="caption" id="provenance"></p>
+  <h2>References</h2>
+  <ol class="refs">
+    <li>Xie et al. TravelPlanner: A Benchmark for Real-World Planning with Language Agents. ICML 2024. Evaluator code: github.com/OSU-NLP-Group/TravelPlanner (MIT).</li>
+    <li>Kambhampati et al. LLMs Can't Plan, But Can Help Planning in LLM-Modulo Frameworks. ICML 2024.</li>
+    <li>Gundawar et al. Robust Planning with LLM-Modulo Framework: Case Study in Travel Planning. arXiv 2405.20625, 2024.</li>
+    <li>Hao, Chen, Zhang, Fan. Large Language Models Can Solve Real-World Planning Rigorously with Formal Verification and Tool Use. NAACL 2025 (arXiv 2404.11891).</li>
+    <li>Ju et al. To the Globe (TTG): Towards Language-Driven Guaranteed Travel Planning. EMNLP 2024 Demos.</li>
+    <li>Hooker, Ottosson. Logic-based Benders decomposition. Mathematical Programming 96, 2003.</li>
+    <li>Vansteenwegen, Souffriau, Van Oudheusden. The orienteering problem: A survey. EJOR 209, 2011.</li>
+    <li>Huangfu, Hall. Parallelizing the dual revised simplex method (HiGHS). Math. Prog. Comp. 10, 2018.</li>
+    <li>India Meteorological Department. Rainy day: 24-h rainfall of 2.5 mm or more.</li>
+  </ol>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+const NAMES = { greedy: "Greedy (TravelMate fallback)", llm_pipeline: "LLM + repair (TravelMate today)", llm_raw: "LLM only",
+  llm_modulo: "LLM-Modulo (3 critic rounds)", milp: "MILP, weather-blind (ours, ablation)", milp_robust: "MILP robust + Plan B (ours)" };
+const OURS = "milp_robust";
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pct = (v) => (v == null ? "–" : (100 * v).toFixed(1));
+let season = "nov";
+
+function abstract() {
+  const n = DATA.seasons.nov, m = DATA.seasons.monsoon, T6 = DATA.T6[OURS] || {};
+  const f = (s, k) => pct(s.T1[k]?.["Final Pass Rate"]);
+  $("abstract").innerHTML = `<b>Abstract</b>
+  <p>LLM travel planners still break hard constraints, and travel-planning benchmarks assume the weather is known in advance. We keep the LLM for language and ranking only and give day planning to an exact solver: a logic-based Benders loop whose subproblem is a minute-by-minute day verifier. We extend the objective to expected utility under climatological wet-day probabilities and add an indoor Plan B for each day.</p>
+  <p>On ${DATA.n_cases} real Indian trips (OpenStreetMap, OSRM, Open-Meteo), scored by a port of TravelPlanner's constraint evaluator, the robust planner reaches a final pass rate of <span class="num">${f(n, OURS)}%</span> on the original dates and <span class="num">${f(m, OURS)}%</span> on the same trips in July. The comparable figures are <span class="num">${f(n, "llm_pipeline")}% / ${f(m, "llm_pipeline")}%</span> for the production LLM pipeline and <span class="num">${f(n, "llm_modulo")}% / ${f(m, "llm_modulo")}%</span> for LLM-Modulo with three critic rounds. ${pct(T6.optimal_share)}% of the solves are certified optimal, with a mean time of <span class="num">${(T6.seconds ?? 0).toFixed(2)} s</span> and no LLM call.</p>`;
+}
+
+function tableT1() {
+  const t = DATA.seasons[season].T1, cols = ["Delivery Rate", "Commonsense Micro Pass Rate", "Commonsense Macro Pass Rate", "Hard Micro Pass Rate", "Hard Macro Pass Rate", "Final Pass Rate"];
+  const best = Object.fromEntries(cols.map((c) => [c, Math.max(...Object.values(t).map((v) => v[c]))]));
+  $("t1").innerHTML = `<table><thead><tr><th>System</th>${cols.map((c) => `<th>${c.replace(" Pass Rate", "")}</th>`).join("")}</tr></thead><tbody>
+  ${Object.entries(t).map(([s, v]) => `<tr class="${s === OURS ? "ours" : ""}"><td>${NAMES[s]}</td>${cols.map((c) => `<td class="num ${v[c] === best[c] ? "best" : ""}">${pct(v[c])}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+}
+
+function tableT4() {
+  const t = DATA.seasons[season].T4; const names = Object.keys(Object.values(t)[0] || {});
+  $("t4").innerHTML = `<table><thead><tr><th>System</th>${names.map((n) => `<th>${n}</th>`).join("")}</tr></thead><tbody>
+  ${Object.entries(t).map(([s, v]) => `<tr><td>${NAMES[s]}</td>${names.map((n) => { const x = v[n]; return `<td class="num ${x == null ? "" : x >= 0.995 ? "cell-ok" : x < 0.8 ? "cell-bad" : ""}">${x == null ? "n/a" : (100 * x).toFixed(0)}</td>`; }).join("")}</tr>`).join("")}</tbody></table>`;
+}
+
+function tableT3() {
+  const t = DATA.seasons[season].T3;
+  $("t3").innerHTML = `<table><thead><tr><th>Ours vs</th><th>Δ expected value (pp)</th><th>95% CI</th><th>Δ final pass</th><th>95% CI</th></tr></thead><tbody>
+  ${Object.entries(t).map(([s, v]) => `<tr><td>${NAMES[s]}</td><td class="num">${v.d_expected_pct}</td><td class="num">[${v.ci_expected.join(", ")}]</td><td class="num">${v.d_final_pass}</td><td class="num">[${v.ci_final_pass.join(", ")}]</td></tr>`).join("")}</tbody></table>`;
+}
+
+function chartF1() {
+  const t = DATA.seasons[season].T2, rows = Object.entries(t), metrics = [["u_dry", "dry day", "var(--sun)"], ["u_expected", "expected", "var(--rain)"], ["u_all_wet", "every day wet", "var(--muted)"]];
+  const W = 760, rowH = 46, left = 250, H = rows.length * rowH + 40, x = (v) => left + (W - left - 40) * v / 100;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Plan value by system">`;
+  [0, 25, 50, 75, 100].forEach((v) => { s += `<line x1="${x(v)}" x2="${x(v)}" y1="10" y2="${H - 24}" stroke="var(--line)"/><text x="${x(v)}" y="${H - 8}" text-anchor="middle">${v}%</text>`; });
+  rows.forEach(([sys, v], i) => {
+    const y = 14 + i * rowH;
+    s += `<text class="lbl" x="0" y="${y + 18}">${esc(NAMES[sys])}</text>`;
+    metrics.forEach(([k, , col], j) => { const val = v[k] ?? 0; s += `<rect x="${left}" y="${y + j * 11}" width="${Math.max(0, x(val) - left)}" height="9" rx="2" fill="${col}"/>`; if (k === "u_expected") s += `<text x="${x(val) + 6}" y="${y + j * 11 + 8}">${val.toFixed(1)}</text>`; });
+  });
+  s += "</svg>";
+  $("f1").innerHTML = s + `<div class="legend" style="margin-top:8px">${metrics.map(([, l, c]) => `<span><span class="dot" style="background:${c}"></span>${l}</span>`).join("")}</div>`;
+}
+
+function chartF2() {
+  const t = DATA.T5, rhos = Object.keys(t), W = 760, H = 240, L = 50, B = 30, R = 20;
+  const vals = rhos.flatMap((r) => [t[r].expected_gain_pct ?? 0, t[r].all_wet_gain_pct ?? 0]);
+  const top = Math.max(5, Math.ceil(Math.max(...vals) / 5) * 5);
+  const x = (i) => L + (W - L - R) * i / Math.max(1, rhos.length - 1), y = (v) => H - B - (H - B - 14) * v / top;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gain over weather-blind MILP by rain loss">`;
+  for (let v = 0; v <= top; v += top / 4) s += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${v.toFixed(0)}%</text>`;
+  rhos.forEach((r, i) => { s += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle">ρ = ${r}</text>`; });
+  [["expected_gain_pct", "var(--rain)", "expected value"], ["all_wet_gain_pct", "var(--sun)", "if every day is wet"]].forEach(([k, c]) => {
+    s += `<polyline fill="none" stroke="${c}" stroke-width="2.5" points="${rhos.map((r, i) => `${x(i)},${y(t[r][k] ?? 0)}`).join(" ")}"/>`;
+    rhos.forEach((r, i) => { s += `<circle cx="${x(i)}" cy="${y(t[r][k] ?? 0)}" r="4" fill="${c}"/><text x="${x(i)}" y="${y(t[r][k] ?? 0) - 9}" text-anchor="middle">${(t[r][k] ?? 0).toFixed(1)}</text>`; });
+  });
+  s += "</svg>";
+  $("f2").innerHTML = s + `<div class="legend" style="margin-top:8px"><span><span class="dot" style="background:var(--rain)"></span>gain in expected value</span><span><span class="dot" style="background:var(--sun)"></span>gain if every day is wet</span><span>n = ${Object.values(t)[0]?.n ?? 0} July trips</span></div>`;
+}
+
+function solverStats() {
+  const r = DATA.T6[OURS] || {}, b = DATA.T6.milp || {};
+  const items = [[`${pct(r.optimal_share)}%`, "robust solves certified optimal"], [`${(r.seconds ?? 0).toFixed(2)} s`, `mean solve time, max ${(r.max_seconds ?? 0).toFixed(2)} s`],
+    [`${r.iterations ?? 0}`, `Benders iterations (mean), max ${r.max_iterations ?? 0}`], [`${r.cuts ?? 0}`, "no-good cuts per solve (mean)"], ["0", "LLM calls in day planning"], [`${pct(b.optimal_share)}%`, "weather-blind solves optimal"]];
+  $("solver").innerHTML = items.map(([v, l]) => `<div class="stat"><b class="num">${v}</b><span>${l}</span></div>`).join("");
+}
+
+function render() {
+  document.querySelectorAll(".tabs button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.season === season)));
+  const s = DATA.seasons[season];
+  $("season-note").textContent = `${s.n} paired trips. Mean wet-day probability ${(100 * (s.p_wet_mean ?? 0)).toFixed(0)}%. Every system plans from the same frozen tool outputs.`;
+  tableT1(); chartF1(); tableT4(); tableT3();
+}
+
+// ---- explorer: same analytic expected utility as app/planning/robust.py:evaluate ----
+let ex = null, pw = [];
+function dayVal(places, ids, wet, rho) { return ids.reduce((a, id) => { const p = places[id]; return p ? a + p[2] * (wet && p[3] ? 1 - rho : 1) : a; }, 0); }
+function expected(e, sys, rho) {
+  let tot = 0; (sys.plan || []).forEach((ids, d) => {
+    const p = pw[d] ?? 0, dry = dayVal(e.places, ids, false, rho), wetA = dayVal(e.places, ids, true, rho), wetB = dayVal(e.places, (sys.plan_b || [])[d] || [], true, rho);
+    tot += (1 - p) * dry + p * Math.max(wetA, wetB);
+  }); return tot;
+}
+function pickCase() {
+  const id = $("case").value, se = $("xseason").value;
+  ex = DATA.examples.find((e) => e.case_id === id && e.season === se) || DATA.examples.find((e) => e.case_id === id);
+  pw = [...ex.p_wet];
+  $("days").innerHTML = ex.dates.map((d, i) => `<div class="day"><b>Day ${i + 1}</b><span class="caption">${new Date(d + "T00:00").toLocaleDateString(undefined, { day: "numeric", month: "short" })}</span>
+    <label class="rain" for="pw-${i}">rain <span id="pwv-${i}" class="num">${Math.round(pw[i] * 100)}%</span></label><input type="range" id="pw-${i}" min="0" max="1" step="0.05" value="${pw[i]}" aria-label="Rain chance day ${i + 1}"></div>`).join("");
+  ex.dates.forEach((_, i) => $(`pw-${i}`).addEventListener("input", (ev) => { pw[i] = +ev.target.value; $(`pwv-${i}`).textContent = `${Math.round(pw[i] * 100)}%`; scoreSystems(); }));
+  drawSystems();
+}
+function drawSystems() {
+  const order = ["milp_robust", "milp", "llm_modulo", "llm_pipeline", "llm_raw", "greedy"].filter((s) => ex.systems[s]);
+  $("sys").innerHTML = order.map((s) => {
+    const v = ex.systems[s];
+    if (v.delivered === false) return `<div class="sysrow"><div class="sysname"><b>${NAMES[s]}</b><span class="pill na">no plan delivered</span></div><div></div></div>`;
+    const pill = v.final_pass ? `<span class="pill ok">all constraints pass</span>` : `<span class="pill bad">fails: ${esc(v.failed.join(", "))}</span>`;
+    const days = v.plan.map((ids, d) => `<div><ol>${ids.map((id) => { const p = ex.places[id] || [id, "?", 0, false]; return `<li class="${p[3] ? "out" : ""}">${esc(p[0])}</li>`; }).join("") || "<li class='caption'>free time</li>"}</ol>${(v.plan_b[d] || []).length ? `<div class="b">Plan B: ${esc(v.plan_b[d].map((id) => ex.places[id]?.[0] || id).join(", "))}</div>` : ""}</div>`).join("");
+    return `<div class="sysrow"><div class="sysname"><b>${NAMES[s]}</b>${pill}<span class="caption">expected value</span><span class="eu" id="eu-${s}"></span><div class="bar" id="bar-${s}"></div></div><div class="plan">${days}</div></div>`;
+  }).join("");
+  scoreSystems();
+}
+function scoreSystems() {
+  const rho = +$("rho").value; $("rho-v").textContent = rho.toFixed(2);
+  const vals = Object.fromEntries(Object.entries(ex.systems).filter(([, v]) => v.plan).map(([s, v]) => [s, expected(ex, v, rho)]));
+  const best = Math.max(...Object.values(vals), 1e-9);
+  Object.entries(vals).forEach(([s, v]) => { const e = $(`eu-${s}`), b = $(`bar-${s}`); if (e) e.textContent = v.toFixed(2); if (b) b.style.width = `${(100 * v / best).toFixed(1)}%`; });
+}
+
+function boot() {
+  if (!DATA) { $("abstract").textContent = "No results embedded. Run python -m research.build_demo."; return; }
+  abstract(); render(); chartF2(); solverStats();
+  document.querySelectorAll(".tabs button").forEach((b) => b.addEventListener("click", () => { season = b.dataset.season; render(); }));
+  const ids = [...new Set(DATA.examples.map((e) => e.case_id))];
+  $("case").innerHTML = ids.map((id) => { const e = DATA.examples.find((x) => x.case_id === id); return `<option value="${id}">${esc(`${e.request.origin} → ${e.request.destination}, ${e.request.days} d, ${e.request.pace}`)}</option>`; }).join("");
+  $("case").value = ids[0]; $("xseason").value = "monsoon";
+  $("case").addEventListener("change", pickCase); $("xseason").addEventListener("change", pickCase);
+  $("rho").addEventListener("input", scoreSystems);
+  pickCase();
+  $("provenance").textContent = `Embedded results: ${DATA.n_cases} trips, ${DATA.n_paired} paired trip-seasons, LLM baselines on ${DATA.provider || "NVIDIA Nemotron"}. Built ${DATA.built || ""}.`;
+}
+boot();
+</script>

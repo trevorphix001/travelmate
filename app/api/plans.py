@@ -69,6 +69,15 @@ class Health(BaseModel):
     status: str
     providers: dict[str, bool]
     db: bool
+    storage: Literal["server", "browser"] = "server"  # browser: plans are kept on the user's device
+    planner: str = "robust"
+
+
+class StatelessEditIn(BaseModel):
+    """Stateless edit: the browser sends the plan it holds; nothing is stored on the server."""
+    model_config = ConfigDict(extra="forbid")
+    plan: TripPlan
+    instruction: str = Field(min_length=3, max_length=300)
 
 
 def graph(request: Request):
@@ -109,7 +118,8 @@ async def persist(plan: TripPlan, user_id: str | None, run_id: str) -> TripPlan:
 async def health() -> Health:
     configured = build_providers()
     db = await repo.ping()
-    return Health(status="ok", providers={n: n in configured for n in ("nvidia", "groq", "gemini")}, db=db)
+    return Health(status="ok", providers={n: n in configured for n in ("nvidia", "groq", "gemini")}, db=db,
+                  storage="server" if db else "browser", planner=get_settings().planner)
 
 
 @router.post("/plans/parse", response_model=TripRequest | Clarification)
@@ -203,6 +213,21 @@ async def edit(plan_id: str, body: EditIn, user: Annotated[str, Depends(required
         res.plan.trace = [*res.plan.trace, res.metric]
     await repo.update_plan(plan_id, user, res.plan)
     await repo.add_edit(plan_id, body.instruction, res.diff)
+    return EditOut(plan=res.plan, diff=res.diff)
+
+
+@router.post("/plans/edit", response_model=EditOut, dependencies=[Depends(plan_rate_limit)])
+async def edit_stateless(body: StatelessEditIn) -> EditOut:
+    """Edit a plan held by the browser (stateless mode). Same validators as a saved plan; nothing persisted."""
+    try:
+        validate_plan(body.plan)
+    except AppError as e:
+        raise AppError("plan_invalid", "This trip can't be edited", e.title, 422) from None
+    res = await edit_plan(body.plan, body.instruction)
+    if res.question:
+        return EditOut(needs_clarification=True, question=res.question)
+    if res.metric:
+        res.plan.trace = [*res.plan.trace, res.metric]
     return EditOut(plan=res.plan, diff=res.diff)
 
 

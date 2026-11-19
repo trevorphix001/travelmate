@@ -25,7 +25,8 @@ def gp(d) -> GeoPoint:
 
 # ---- geocode -------------------------------------------------------------
 @respx.mock
-async def test_geocode_hit():
+async def test_geocode_hit(monkeypatch):
+    monkeypatch.setattr("app.db.repo._csv_cities", lambda: [])  # force the Nominatim path
     respx.get(geocode.NOMINATIM).respond(json=[SHILLONG])
     p = await geocode.geocode("Shillong")
     assert p and p.name == "Shillong" and p.confidence == "verified"

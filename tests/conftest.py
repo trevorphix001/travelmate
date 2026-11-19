@@ -11,6 +11,13 @@ from app.tools.http import request_json
 
 request_json.retry.wait = wait_none()  # no backoff sleeps in tests
 
+
+@pytest.fixture(autouse=True)
+def _llm_planner_by_default(monkeypatch):
+    """Legacy tests exercise the LLM day-grouping path; tests/planning cover the robust planner."""
+    from app.core.config import get_settings
+    monkeypatch.setattr(get_settings(), "planner", "llm")
+
 FIXTURES = Path(__file__).parent / "fixtures"
 
 

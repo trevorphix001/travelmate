@@ -1,4 +1,4 @@
-import { api } from "../api.js?v=9";
+import { api, storageMode } from "../api.js?v=9";
 import { authEnabled, currentUser } from "../auth.js?v=9";
 import { icon } from "../icons.js?v=9";
 import { hydratePhotos } from "../photos.js?v=9";
@@ -9,7 +9,7 @@ const destOf = (title) => (title.split(" to ")[1] || title).split(",")[0].trim()
 
 export async function renderMyPlans(el) {
   const shell = (inner) => { el.innerHTML = `<div class="container page">${head}${inner}</div>`; };
-  if (!currentUser()) {
+  if (!currentUser() && storageMode() !== "browser") {
     shell(`<div class="card empty"><span class="cat-icon">${icon("user")}</span><h2>Sign in to see your trips</h2>
       <p class="muted">${authEnabled() ? "Use “Sign in” at the top of the page. We'll email you a link." : "Sign-in isn't available right now."}</p>
       <a class="btn btn-cta" href="#/">${icon("search")} Plan a trip</a></div>`);
@@ -20,7 +20,7 @@ export async function renderMyPlans(el) {
     const plans = await api.listPlans();
     if (!plans.length) {
       shell(`<div class="card empty"><span class="cat-icon">${icon("map")}</span><h2>No saved trips yet</h2>
-        <p class="muted">Trips you plan while signed in are saved here.</p><a class="btn btn-cta" href="#/">${icon("search")} Plan a trip</a></div>`);
+        <p class="muted">${storageMode() === "browser" ? "Trips you save are kept in this browser, on this device only." : "Trips you plan while signed in are saved here."}</p><a class="btn btn-cta" href="#/">${icon("search")} Plan a trip</a></div>`);
       return;
     }
     shell(`<div class="trips-grid">${plans.map((p) => `

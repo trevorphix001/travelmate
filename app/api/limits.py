@@ -10,7 +10,7 @@ from app.core.config import get_settings
 from app.core.errors import AppError
 
 MAX_BODY_BYTES = 4096
-SAVE_MAX_BYTES = 512 * 1024  # POST /plans/save carries a whole trip; everything else stays small
+SAVE_MAX_BYTES = 512 * 1024  # POST /plans/save and /plans/edit carry a whole trip; everything else stays small
 _hits: dict[str, deque[float]] = defaultdict(deque)
 
 
@@ -39,7 +39,8 @@ def reset() -> None:
 class BodySizeLimit(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
         size = request.headers.get("content-length")
-        cap = SAVE_MAX_BYTES if request.url.path.endswith("/plans/save") else MAX_BODY_BYTES
+        # /plans/save and the stateless /plans/edit carry a whole trip; /plans/{id}/edit does not
+        cap = SAVE_MAX_BYTES if request.url.path.endswith(("/plans/save", "/plans/edit")) else MAX_BODY_BYTES
         if size and size.isdigit() and int(size) > cap:
             return JSONResponse({"type": "payload_too_large", "title": "Request body too large",
                                  "detail": f"Max {cap} bytes"}, status_code=413,
